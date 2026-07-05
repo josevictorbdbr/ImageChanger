@@ -1,0 +1,20 @@
+# Dependências
+node_modules/
+
+# Build do Next.js
+.next/
+out/
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db

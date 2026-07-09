@@ -33,7 +33,7 @@ export default function Home() {
         <div className="mx-auto max-w-5xl px-4 py-16 text-center">
           <h1 className="font-display text-4xl font-bold text-ink sm:text-5xl">
             Converta e edite imagens.
-            <br /> Sem enviar nada para servidor nenhum.
+            <br /> Gratuitamente, sem cadastro.
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-muted">
             Ferramentas gratuitas de conversão e edição de imagem, rápidas, sem cadastro e que processam tudo direto

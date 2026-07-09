@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CoffeeButton from "./CoffeeButton";
 
 export default function Footer() {
   return (
@@ -6,7 +7,7 @@ export default function Footer() {
       {/* Espaço reservado para anúncio do Google AdSense */}
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-4 py-6 text-center text-xs text-muted">
         <p>Image Changer — suas imagens não saem do seu navegador.</p>
-        <nav className="flex gap-4">
+        <nav className="flex flex-wrap items-center justify-center gap-4">
           <Link href="/privacidade" className="hover:text-accent">
             Política de Privacidade
           </Link>
@@ -16,9 +17,17 @@ export default function Footer() {
           <Link href="/cookies" className="hover:text-accent">
             Cookies
           </Link>
+          <a
+            href="https://github.com/josevictorbdbr"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-accent"
+          >
+            GitHub
+          </a>
+          <CoffeeButton />
         </nav>
       </div>
     </footer>
   );
 }
-

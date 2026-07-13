@@ -1,6 +1,7 @@
 import Layout from "../components/Layout";
 import SeoHead from "../components/SeoHead";
 import ToolCard from "../components/ToolCard";
+import AdBanner from "../components/AdBanner";
 import { CropIcon, ResizeIcon, CompressIcon, RotateIcon, FlipIcon } from "../components/icons/ToolIcons";
 
 const conversions = [
@@ -33,7 +34,7 @@ export default function Home() {
         <div className="mx-auto max-w-5xl px-4 py-16 text-center">
           <h1 className="font-display text-4xl font-bold text-ink sm:text-5xl">
             Converta e edite imagens.
-            <br /> Gratuitamente, sem cadastro.
+            <br /> Sem enviar nada para servidor nenhum.
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-muted">
             Ferramentas gratuitas de conversão e edição de imagem, rápidas, sem cadastro e que processam tudo direto
@@ -42,6 +43,8 @@ export default function Home() {
         </div>
       </section>
 
+      <AdBanner position="home-below-hero" className="py-8" />
+
       <section className="mx-auto max-w-5xl px-4 py-14">
         <h2 className="font-display text-xl font-semibold text-ink">Conversão de formatos</h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -49,6 +52,8 @@ export default function Home() {
             <ToolCard key={tool.href} {...tool} />
           ))}
         </div>
+
+        <AdBanner position="home-between-sections" className="my-10" />
 
         <h2 className="mt-14 font-display text-xl font-semibold text-ink">Edição de imagens</h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

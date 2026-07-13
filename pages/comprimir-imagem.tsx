@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import DropZone from "../components/DropZone";
 import SeoHead from "../components/SeoHead";
 import FaqList from "../components/FaqList";
+import AdBanner from "../components/AdBanner";
 import { useImageFile } from "../hooks/useImageFile";
 import { useObjectUrl } from "../hooks/useObjectUrl";
 import { compressImage } from "../tools/imageEditor";
@@ -134,6 +135,9 @@ export default function ComprimirImagem() {
             </div>
           )}
         </div>
+
+        <AdBanner position="tool-below-editor" className="my-10" />
+        <AdBanner position="tool-above-faq" className="mb-8" />
 
         <FaqList items={faq} />
       </section>

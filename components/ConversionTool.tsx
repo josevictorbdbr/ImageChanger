@@ -3,6 +3,7 @@ import Layout from "./Layout";
 import DropZone from "./DropZone";
 import SeoHead from "./SeoHead";
 import FaqList, { FaqItem } from "./FaqList";
+import AdBanner from "./AdBanner";
 import { useMultiImageFiles, ManagedFile } from "../hooks/useMultiImageFiles";
 import { convertImage, ImageFormat } from "../tools/imageConverter";
 import { downloadBlob } from "../utils/downloadFile";
@@ -258,6 +259,9 @@ export default function ConversionTool({ title, description, path, toFormat, faq
             </div>
           )}
         </div>
+
+        <AdBanner position="tool-below-editor" className="my-10" />
+        <AdBanner position="tool-above-faq" className="mb-8" />
 
         <FaqList items={faq} />
       </section>

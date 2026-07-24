@@ -3,7 +3,9 @@ import Layout from "./Layout";
 import DropZone from "./DropZone";
 import SeoHead from "./SeoHead";
 import FaqList, { FaqItem } from "./FaqList";
-import AdBanner from "./AdBanner";
+import HowItWorks from "./HowItWorks";
+import FaqAccordion from "./FaqAccordion";
+import { SITE_FAQ } from "../utils/siteFaq";
 import { useMultiImageFiles, ManagedFile } from "../hooks/useMultiImageFiles";
 import { convertImage, ImageFormat } from "../tools/imageConverter";
 import { downloadBlob } from "../utils/downloadFile";
@@ -259,12 +261,17 @@ export default function ConversionTool({ title, description, path, toFormat, faq
             </div>
           )}
         </div>
-
-        <AdBanner position="tool-below-editor" className="my-10" />
-        <AdBanner position="tool-above-faq" className="mb-8" />
-
-        <FaqList items={faq} />
       </section>
+
+      <div className="mx-auto max-w-5xl px-4 pb-14">
+        <div className="mt-4">
+          <HowItWorks />
+        </div>
+
+        <div className="mt-14">
+          <FaqAccordion items={SITE_FAQ} title="Outras perguntas frequentes" />
+        </div>
+      </div>
     </Layout>
   );
 }

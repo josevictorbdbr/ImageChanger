@@ -131,9 +131,6 @@ export default function EspelharImagem() {
           )}
         </div>
 
-        <AdBanner position="tool-below-editor" className="my-10" />
-        <AdBanner position="tool-above-faq" className="mb-8" />
-
         <FaqList items={faq} />
       </section>
     </Layout>

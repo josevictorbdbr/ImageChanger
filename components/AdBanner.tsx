@@ -6,18 +6,21 @@ declare global {
   }
 }
 
-export type AdPosition = "home-below-hero" | "home-between-sections" | "tool-below-editor" | "tool-above-faq";
+export type AdPosition =
+  | "home-below-hero"
+  | "home-between-sections"
+  | "home-above-faq"
+  | "tool-below-editor"
+  | "tool-above-faq";
 
-// Passo 1 (após aprovação no AdSense): troque para true.
+
 const ADSENSE_ENABLED = false;
-
 const AD_CLIENT = "ca-pub-8253287126741398";
 
-// Passo 2: cole aqui o "data-ad-slot" de cada unidade de anúncio criada no painel do AdSense.
-// Não é necessário mexer em nenhuma página — só neste mapa.
 const AD_SLOTS: Record<AdPosition, string> = {
   "home-below-hero": "",
   "home-between-sections": "",
+  "home-above-faq": "",
   "tool-below-editor": "",
   "tool-above-faq": "",
 };
@@ -36,7 +39,6 @@ export default function AdBanner({ position, className = "" }: AdBannerProps) {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch {
-      // adsbygoogle ainda não carregou; sem problema, não quebra a página
     }
   }, [shouldRender]);
 

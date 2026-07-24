@@ -10,6 +10,7 @@ import { useMultiImageFiles, ManagedFile } from "../hooks/useMultiImageFiles";
 import { convertImage, ImageFormat } from "../tools/imageConverter";
 import { downloadBlob } from "../utils/downloadFile";
 import { formatBytes, replaceExtension } from "../utils/formatBytes";
+import FormatComparisonTable from "./FormatComparisonTable";
 
 interface ConversionToolProps {
   title: string;
@@ -266,6 +267,10 @@ export default function ConversionTool({ title, description, path, toFormat, faq
       <div className="mx-auto max-w-5xl px-4 pb-14">
         <div className="mt-4">
           <HowItWorks />
+        </div>
+
+        <div className="mt-20">
+          <FormatComparisonTable />
         </div>
 
         <div className="mt-14">

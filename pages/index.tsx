@@ -92,10 +92,6 @@ export default function Home() {
         </div>
 
         <div className="mt-20">
-          <FormatComparisonTable />
-        </div>
-
-        <div className="mt-20">
           <FaqAccordion items={SITE_FAQ} />
         </div>
       </div>

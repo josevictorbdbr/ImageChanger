@@ -6,13 +6,14 @@ interface LegalLayoutProps {
   title: string;
   path: string;
   updatedAt: string;
+  description?: string;
   children: ReactNode;
 }
 
-export default function LegalLayout({ title, path, updatedAt, children }: LegalLayoutProps) {
+export default function LegalLayout({ title, path, updatedAt, description, children }: LegalLayoutProps) {
   return (
     <Layout>
-      <SeoHead title={title} description={`${title} do Image Changer.`} path={path} />
+      <SeoHead title={title} description={description ?? `${title} do Image Changer.`} path={path} />
 
       <article className="mx-auto max-w-3xl px-4 py-12">
         <h1 className="text-3xl font-bold text-ink">{title}</h1>
@@ -22,4 +23,3 @@ export default function LegalLayout({ title, path, updatedAt, children }: LegalL
     </Layout>
   );
 }
-

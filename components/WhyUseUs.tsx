@@ -1,4 +1,4 @@
-import { LockIcon, TagIcon, BoltIcon, LayersIcon } from "./icons/InfoIcons";
+import { LockIcon, TagIcon, InfinityIcon, LayersIcon } from "./icons/InfoIcons";
 import { ReactNode } from "react";
 
 interface Highlight {
@@ -19,9 +19,10 @@ const HIGHLIGHTS: Highlight[] = [
     description: "Acesso direto a todas as ferramentas, sem precisar criar conta ou fazer login.",
   },
   {
-    icon: <BoltIcon />,
-    title: "Velocidade máxima",
-    description: "Sem filas de upload ou download: o processamento depende só do seu dispositivo.",
+    icon: <InfinityIcon />,
+    title: "Sem limite de uso",
+    description:
+      "Envie e altere quantas imagens quiser. Por não armazenarmos nenhuma informação sua, não há limite de uso diário ou por conta.",
   },
   {
     icon: <LayersIcon />,
@@ -37,7 +38,7 @@ export default function WhyUseUs() {
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         {HIGHLIGHTS.map((item) => (
           <div key={item.title} className="rounded-2xl border border-border bg-white p-5">
-            <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-accent">
+            <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-paper text-ink">
               {item.icon}
             </span>
             <h3 className="mt-3 font-display text-base font-semibold text-ink">{item.title}</h3>

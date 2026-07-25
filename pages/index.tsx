@@ -4,7 +4,6 @@ import ToolCard from "../components/ToolCard";
 import FormatSelector from "../components/Formatselector";
 import HowItWorks from "../components/HowItWorks";
 import WhyUseUs from "../components/WhyUseUs";
-import FormatComparisonTable from "../components/FormatComparisonTable";
 import FaqAccordion from "../components/FaqAccordion";
 import { SITE_FAQ } from "../utils/siteFaq";
 import { CropIcon, ResizeIcon, CompressIcon, RotateIcon, FlipIcon } from "../components/icons/ToolIcons";
@@ -15,7 +14,6 @@ const editing = [
     title: "Cortar imagem",
     description: "Recorte a área que você quiser manter.",
     icon: <CropIcon />,
-    badge: "Popular",
   },
   {
     href: "/redimensionar-imagem",
@@ -28,7 +26,6 @@ const editing = [
     title: "Comprimir imagem",
     description: "Diminua o tamanho do arquivo ajustando a qualidade.",
     icon: <CompressIcon />,
-    badge: "Popular",
   },
   {
     href: "/girar-imagem",

@@ -23,7 +23,7 @@ const STEPS: Step[] = [
   {
     number: "4",
     title: "Baixe instantaneamente",
-    description: "Receba o resultado processado direto no seu navegador, sem espera.",
+    description: "Receba o resultado pronto direto no seu navegador, sem espera.",
   },
 ];
 
@@ -34,7 +34,7 @@ export default function HowItWorks() {
       <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {STEPS.map((step) => (
           <div key={step.number} className="rounded-2xl border border-border bg-white p-5">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 font-mono text-sm font-semibold text-accent">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-paper font-mono text-sm font-semibold text-ink">
               {step.number}
             </span>
             <h3 className="mt-3 font-display text-base font-semibold text-ink">{step.title}</h3>

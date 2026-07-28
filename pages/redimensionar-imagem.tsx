@@ -3,7 +3,6 @@ import Layout from "../components/Layout";
 import DropZone from "../components/DropZone";
 import SeoHead from "../components/SeoHead";
 import FaqList from "../components/FaqList";
-import AdBanner from "../components/AdBanner";
 import { useImageFile } from "../hooks/useImageFile";
 import { useObjectUrl } from "../hooks/useObjectUrl";
 import { resizeImage } from "../tools/imageEditor";
@@ -20,6 +19,11 @@ const faq = [
   },
 ];
 
+interface Dimensions {
+  width: number;
+  height: number;
+}
+
 export default function RedimensionarImagem() {
   const { file, previewUrl, isDragging, selectFile, reset, handleDrop, handleDragOver, handleDragLeave } =
     useImageFile();
@@ -28,7 +32,14 @@ export default function RedimensionarImagem() {
   const [result, setResult] = useState<Blob | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
+  const [dimensions, setDimensions] = useState<Dimensions | null>(null);
   const resultUrl = useObjectUrl(result);
+
+  // lê a dimensão real a partir do próprio <img> de preview já renderizado na tela
+  const handlePreviewLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const { naturalWidth, naturalHeight } = e.currentTarget;
+    if (naturalWidth && naturalHeight) setDimensions({ width: naturalWidth, height: naturalHeight });
+  };
 
   const handleResize = async () => {
     if (!file) return;
@@ -79,6 +90,7 @@ export default function RedimensionarImagem() {
               <img
                 src={resultUrl && !showOriginal ? resultUrl : previewUrl}
                 alt={resultUrl && !showOriginal ? "Imagem redimensionada" : "Pré-visualização"}
+                onLoad={handlePreviewLoad}
                 className={`max-h-80 rounded-lg border ${
                   resultUrl && !showOriginal ? "border-accent" : "border-border"
                 }`}
@@ -91,6 +103,12 @@ export default function RedimensionarImagem() {
                 >
                   {showOriginal ? "Ver imagem redimensionada" : "Ver imagem original"}
                 </button>
+              )}
+
+              {dimensions && (
+                <p className="font-mono text-xs text-muted">
+                  {showOriginal || !resultUrl ? "Original" : "Redimensionada"}: {dimensions.width}×{dimensions.height}
+                </p>
               )}
 
               <div className="flex items-center gap-3">
@@ -136,6 +154,7 @@ export default function RedimensionarImagem() {
                   reset();
                   setResult(null);
                   setShowOriginal(false);
+                  setDimensions(null);
                 }}
                 className="text-sm text-muted underline underline-offset-2"
               >

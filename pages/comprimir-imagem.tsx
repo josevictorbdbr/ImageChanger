@@ -3,7 +3,6 @@ import Layout from "../components/Layout";
 import DropZone from "../components/DropZone";
 import SeoHead from "../components/SeoHead";
 import FaqList from "../components/FaqList";
-import AdBanner from "../components/AdBanner";
 import { useImageFile } from "../hooks/useImageFile";
 import { useObjectUrl } from "../hooks/useObjectUrl";
 import { compressImage } from "../tools/imageEditor";
@@ -17,6 +16,11 @@ const faq = [
   },
 ];
 
+interface Dimensions {
+  width: number;
+  height: number;
+}
+
 export default function ComprimirImagem() {
   const { file, previewUrl, isDragging, selectFile, reset, handleDrop, handleDragOver, handleDragLeave } =
     useImageFile();
@@ -24,7 +28,15 @@ export default function ComprimirImagem() {
   const [result, setResult] = useState<Blob | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
+  const [dimensions, setDimensions] = useState<Dimensions | null>(null);
   const resultUrl = useObjectUrl(result);
+
+  // a compressão não altera largura/altura, então basta ler a dimensão uma vez,
+  // a partir do próprio <img> de preview já renderizado
+  const handlePreviewLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const { naturalWidth, naturalHeight } = e.currentTarget;
+    if (naturalWidth && naturalHeight) setDimensions({ width: naturalWidth, height: naturalHeight });
+  };
 
   const handleCompress = async () => {
     if (!file) return;
@@ -73,6 +85,7 @@ export default function ComprimirImagem() {
               <img
                 src={resultUrl && !showOriginal ? resultUrl : previewUrl}
                 alt={resultUrl && !showOriginal ? "Imagem comprimida" : "Pré-visualização"}
+                onLoad={handlePreviewLoad}
                 className={`max-h-80 rounded-lg border ${
                   resultUrl && !showOriginal ? "border-accent" : "border-border"
                 }`}
@@ -87,7 +100,10 @@ export default function ComprimirImagem() {
                 </button>
               )}
 
-              <p className="font-mono text-xs text-muted">Original: {formatBytes(file.size)}</p>
+              <p className="font-mono text-xs text-muted">
+                Original: {formatBytes(file.size)}
+                {dimensions && ` · ${dimensions.width}×${dimensions.height}`}
+              </p>
 
               <label className="flex w-full max-w-xs flex-col text-sm text-muted">
                 Qualidade: {Math.round(quality * 100)}%
@@ -127,6 +143,7 @@ export default function ComprimirImagem() {
                   reset();
                   setResult(null);
                   setShowOriginal(false);
+                  setDimensions(null);
                 }}
                 className="text-sm text-muted underline underline-offset-2"
               >

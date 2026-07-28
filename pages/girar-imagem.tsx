@@ -3,7 +3,6 @@ import Layout from "../components/Layout";
 import DropZone from "../components/DropZone";
 import SeoHead from "../components/SeoHead";
 import FaqList from "../components/FaqList";
-import AdBanner from "../components/AdBanner";
 import { useImageFile } from "../hooks/useImageFile";
 import { useObjectUrl } from "../hooks/useObjectUrl";
 import { rotateImage } from "../tools/imageEditor";

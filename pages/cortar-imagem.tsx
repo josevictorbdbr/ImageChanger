@@ -4,7 +4,6 @@ import DropZone from "../components/DropZone";
 import CropSelector from "../components/CropSelector";
 import SeoHead from "../components/SeoHead";
 import FaqList from "../components/FaqList";
-import AdBanner from "../components/AdBanner";
 import { useImageFile } from "../hooks/useImageFile";
 import { useObjectUrl } from "../hooks/useObjectUrl";
 import { cropImage, CropArea } from "../tools/imageEditor";

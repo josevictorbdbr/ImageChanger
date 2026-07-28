@@ -33,6 +33,11 @@ interface FileResult {
   showOriginal: boolean;
 }
 
+interface Dimensions {
+  width: number;
+  height: number;
+}
+
 // Evita que dois arquivos com o mesmo nome final se sobrescrevam dentro do .zip
 function uniqueZipName(name: string, usedNames: Set<string>): string {
   if (!usedNames.has(name)) {
@@ -56,10 +61,27 @@ export default function ConversionTool({ title, description, path, toFormat, faq
   const { files, isDragging, addFiles, removeFile, reset, handleDrop, handleDragOver, handleDragLeave, maxFiles } =
     useMultiImageFiles();
   const [results, setResults] = useState<Record<string, FileResult>>({});
+  const [dimensions, setDimensions] = useState<Record<string, Dimensions>>({});
   const [isConverting, setIsConverting] = useState(false);
   const [processingIndex, setProcessingIndex] = useState<number | null>(null);
   const [isZipping, setIsZipping] = useState(false);
   const [zipError, setZipError] = useState<string | null>(null);
+
+  // lê a dimensão real da imagem a partir do próprio <img> de preview já renderizado,
+  // sem precisar carregar o arquivo de novo ou usar outra API
+  const handlePreviewLoad = (id: string) => (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const { naturalWidth, naturalHeight } = e.currentTarget;
+    if (!naturalWidth || !naturalHeight) return;
+    setDimensions((prev) => ({ ...prev, [id]: { width: naturalWidth, height: naturalHeight } }));
+  };
+
+  // mostra o tamanho de arquivo correspondente à imagem que está sendo exibida no momento
+  // (original ou convertida), junto com a dimensão mais recente lida do próprio <img>
+  const formatMeta = (item: ManagedFile, sizeOverride?: number) => {
+    const dim = dimensions[item.id];
+    const size = formatBytes(sizeOverride ?? item.file.size);
+    return dim ? `${size} · ${dim.width}×${dim.height}` : size;
+  };
 
   // percorre a lista de arquivos e chama a função de conversão já existente para cada um,
   // sem alterar convertImage — cada imagem segue independente mesmo se alguma falhar
@@ -130,6 +152,7 @@ export default function ConversionTool({ title, description, path, toFormat, faq
     Object.values(results).forEach((r) => r.resultUrl && URL.revokeObjectURL(r.resultUrl));
     reset();
     setResults({});
+    setDimensions({});
     setProcessingIndex(null);
     setZipError(null);
   };
@@ -171,7 +194,8 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                   <img
                     src={showingResult ? r!.resultUrl! : item.previewUrl}
                     alt={showingResult ? "Imagem convertida" : "Pré-visualização"}
-                    className={`max-h-80 rounded-lg border ${showingResult ? "border-accent" : "border-border"}`}
+                    onLoad={handlePreviewLoad(item.id)}
+                    className={`max-h-80 rounded-lg ${showingResult ? "border-2 border-accent" : "border border-border"}`}
                   />
 
                   {r?.status === "done" && (
@@ -184,7 +208,8 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                   )}
 
                   <p className="font-mono text-xs text-muted">
-                    {item.file.name} · {formatBytes(item.file.size)}
+                    {item.file.name} · {showingResult ? "Convertida" : "Original"}:{" "}
+                    {formatMeta(item, showingResult ? r?.result?.size : undefined)}
                   </p>
 
                   {r?.status === "error" && <p className="text-sm text-red-600">{r.error}</p>}
@@ -230,12 +255,13 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                           <img
                             src={item.previewUrl}
                             alt={item.file.name}
+                            onLoad={handlePreviewLoad(item.id)}
                             className="h-14 w-14 rounded object-cover"
                           />
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm text-ink">{item.file.name}</p>
                             <p className="font-mono text-xs text-muted">
-                              {r?.status === "converting" ? "Convertendo..." : formatBytes(item.file.size)}
+                              {r?.status === "converting" ? "Convertendo..." : formatMeta(item)}
                             </p>
                           </div>
                           {!isConverting && (
@@ -265,18 +291,23 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                       )}
 
                       {r?.status === "done" && r.resultUrl && (
-                        <div className="flex flex-col items-center gap-3">
+                        <div className="flex items-center gap-3">
                           <img
-                            src={r.showOriginal ? item.previewUrl : r.resultUrl}
+                            src={r.resultUrl}
                             alt={item.file.name}
-                            className={`max-h-56 rounded-lg border ${
-                              r.showOriginal ? "border-border" : "border-accent"
-                            }`}
+                            onLoad={handlePreviewLoad(item.id)}
+                            className="h-16 w-16 shrink-0 rounded border-2 border-accent object-cover"
                           />
-                          <p className="max-w-full truncate font-mono text-xs text-muted">{item.file.name}</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm text-ink">{item.file.name}</p>
+                            <p className="font-mono text-xs text-muted">
+                              {r.showOriginal ? "Original" : "Convertida"}:{" "}
+                              {formatMeta(item, r.showOriginal ? undefined : r.result?.size)}
+                            </p>
+                          </div>
                           <button
                             onClick={() => toggleOriginal(item.id)}
-                            className="text-sm text-muted underline underline-offset-2"
+                            className="shrink-0 text-sm text-muted underline underline-offset-2"
                           >
                             {r.showOriginal ? "Ver convertida" : "Ver original"}
                           </button>
@@ -336,8 +367,6 @@ export default function ConversionTool({ title, description, path, toFormat, faq
         <FaqList items={faq} />
       </section>
 
-      {/* Fase 1: conteúdo rico compartilhado com a Home, para equilibrar a densidade
-          de texto em todas as rotas de conversão (thin content / AdSense). */}
       <div className="mx-auto max-w-5xl px-4 pb-14">
         <div className="mt-4">
           <HowItWorks />

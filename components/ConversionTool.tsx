@@ -1,16 +1,19 @@
 import { useState } from "react";
+import JSZip from "jszip";
 import Layout from "./Layout";
 import DropZone from "./DropZone";
 import SeoHead from "./SeoHead";
 import FaqList, { FaqItem } from "./FaqList";
+import AdBanner from "./AdBanner";
 import HowItWorks from "./HowItWorks";
+import WhyUseUs from "./WhyUseUs";
+import FormatComparisonTable from "./FormatComparisonTable";
 import FaqAccordion from "./FaqAccordion";
 import { SITE_FAQ } from "../utils/siteFaq";
 import { useMultiImageFiles, ManagedFile } from "../hooks/useMultiImageFiles";
 import { convertImage, ImageFormat } from "../tools/imageConverter";
 import { downloadBlob } from "../utils/downloadFile";
 import { formatBytes, replaceExtension } from "../utils/formatBytes";
-import FormatComparisonTable from "./FormatComparisonTable";
 
 interface ConversionToolProps {
   title: string;
@@ -30,17 +33,39 @@ interface FileResult {
   showOriginal: boolean;
 }
 
+// Evita que dois arquivos com o mesmo nome final se sobrescrevam dentro do .zip
+function uniqueZipName(name: string, usedNames: Set<string>): string {
+  if (!usedNames.has(name)) {
+    usedNames.add(name);
+    return name;
+  }
+  const match = name.match(/^(.*?)(\.[^.]+)?$/);
+  const base = match?.[1] ?? name;
+  const ext = match?.[2] ?? "";
+  let n = 2;
+  let candidate = `${base}-${n}${ext}`;
+  while (usedNames.has(candidate)) {
+    n++;
+    candidate = `${base}-${n}${ext}`;
+  }
+  usedNames.add(candidate);
+  return candidate;
+}
+
 export default function ConversionTool({ title, description, path, toFormat, faq }: ConversionToolProps) {
   const { files, isDragging, addFiles, removeFile, reset, handleDrop, handleDragOver, handleDragLeave, maxFiles } =
     useMultiImageFiles();
   const [results, setResults] = useState<Record<string, FileResult>>({});
   const [isConverting, setIsConverting] = useState(false);
   const [processingIndex, setProcessingIndex] = useState<number | null>(null);
+  const [isZipping, setIsZipping] = useState(false);
+  const [zipError, setZipError] = useState<string | null>(null);
 
   // percorre a lista de arquivos e chama a função de conversão já existente para cada um,
   // sem alterar convertImage — cada imagem segue independente mesmo se alguma falhar
   const convertAll = async () => {
     setIsConverting(true);
+    setZipError(null);
     const initial: Record<string, FileResult> = {};
     files.forEach((f) => (initial[f.id] = { status: "pending", showOriginal: false }));
     setResults(initial);
@@ -78,15 +103,41 @@ export default function ConversionTool({ title, description, path, toFormat, faq
     downloadBlob(r.result, replaceExtension(item.file.name, toFormat));
   };
 
+  const handleDownloadZip = async () => {
+    setIsZipping(true);
+    setZipError(null);
+    try {
+      const zip = new JSZip();
+      const usedNames = new Set<string>();
+
+      files.forEach((item) => {
+        const r = results[item.id];
+        if (!r?.result) return;
+        const name = uniqueZipName(replaceExtension(item.file.name, toFormat), usedNames);
+        zip.file(name, r.result);
+      });
+
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      downloadBlob(zipBlob, `imagens-convertidas-${toFormat}.zip`);
+    } catch {
+      setZipError("Não foi possível gerar o arquivo .zip. Tente novamente.");
+    } finally {
+      setIsZipping(false);
+    }
+  };
+
   const handleReset = () => {
     Object.values(results).forEach((r) => r.resultUrl && URL.revokeObjectURL(r.resultUrl));
     reset();
     setResults({});
     setProcessingIndex(null);
+    setZipError(null);
   };
 
   const allDone =
     files.length > 0 && files.every((f) => results[f.id]?.status === "done" || results[f.id]?.status === "error");
+  const allSucceeded = files.length > 0 && files.every((f) => results[f.id]?.status === "done");
+  const errorCount = files.filter((f) => results[f.id]?.status === "error").length;
 
   return (
     <Layout>
@@ -108,7 +159,7 @@ export default function ConversionTool({ title, description, path, toFormat, faq
             />
           )}
 
-          {/* uma imagem: mesma experiência de sempre, sem lista */}
+          {/* uma imagem: mesma experiência de sempre, sem lista, com download individual */}
           {files.length === 1 &&
             (() => {
               const item = files[0];
@@ -162,7 +213,7 @@ export default function ConversionTool({ title, description, path, toFormat, faq
               );
             })()}
 
-          {/* duas ou mais imagens: lista com remoção antes de converter e progresso individual */}
+          {/* duas ou mais imagens: lista com progresso individual, download só via .zip ao final */}
           {files.length > 1 && (
             <div className="flex flex-col gap-4">
               <p className="text-sm text-muted">
@@ -223,20 +274,12 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                             }`}
                           />
                           <p className="max-w-full truncate font-mono text-xs text-muted">{item.file.name}</p>
-                          <div className="flex gap-3">
-                            <button
-                              onClick={() => toggleOriginal(item.id)}
-                              className="text-sm text-muted underline underline-offset-2"
-                            >
-                              {r.showOriginal ? "Ver convertida" : "Ver original"}
-                            </button>
-                            <button
-                              onClick={() => handleDownload(item)}
-                              className="rounded-full bg-success px-4 py-1 text-sm font-medium text-white hover:bg-success-hover"
-                            >
-                              Baixar
-                            </button>
-                          </div>
+                          <button
+                            onClick={() => toggleOriginal(item.id)}
+                            className="text-sm text-muted underline underline-offset-2"
+                          >
+                            {r.showOriginal ? "Ver convertida" : "Ver original"}
+                          </button>
                         </div>
                       )}
                     </li>
@@ -244,7 +287,7 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                 })}
               </ul>
 
-              {!allDone ? (
+              {!allDone && (
                 <button
                   onClick={convertAll}
                   disabled={isConverting}
@@ -254,26 +297,61 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                     ? `Convertendo ${(processingIndex ?? 0) + 1} de ${files.length}...`
                     : `Converter ${files.length} imagens para ${toFormat.toUpperCase()}`}
                 </button>
-              ) : (
-                <button onClick={handleReset} className="self-center text-sm text-muted underline underline-offset-2">
-                  Converter outras imagens
-                </button>
+              )}
+
+              {allDone && allSucceeded && (
+                <div className="flex flex-col items-center gap-3">
+                  <button
+                    onClick={handleDownloadZip}
+                    disabled={isZipping}
+                    className="rounded-full bg-success px-6 py-2 font-medium text-white transition-colors hover:bg-success-hover disabled:opacity-50"
+                  >
+                    {isZipping ? "Preparando .zip..." : `Baixar ${files.length} imagens (.zip)`}
+                  </button>
+                  {zipError && <p className="text-sm text-red-600">{zipError}</p>}
+                  <button onClick={handleReset} className="text-sm text-muted underline underline-offset-2">
+                    Converter outras imagens
+                  </button>
+                </div>
+              )}
+
+              {allDone && !allSucceeded && (
+                <div className="flex flex-col items-center gap-3 text-center">
+                  <p className="text-sm text-red-600">
+                    {errorCount} de {files.length} imagens não puderam ser convertidas. Por isso o .zip com o lote
+                    não pôde ser gerado.
+                  </p>
+                  <button onClick={handleReset} className="text-sm text-muted underline underline-offset-2">
+                    Tentar novamente com outro lote
+                  </button>
+                </div>
               )}
             </div>
           )}
         </div>
+
+        <AdBanner position="tool-below-editor" className="my-10" />
+        <AdBanner position="tool-above-faq" className="mb-8" />
+
+        <FaqList items={faq} />
       </section>
 
+      {/* Fase 1: conteúdo rico compartilhado com a Home, para equilibrar a densidade
+          de texto em todas as rotas de conversão (thin content / AdSense). */}
       <div className="mx-auto max-w-5xl px-4 pb-14">
         <div className="mt-4">
           <HowItWorks />
         </div>
 
         <div className="mt-20">
+          <WhyUseUs />
+        </div>
+
+        <div className="mt-20">
           <FormatComparisonTable />
         </div>
 
-        <div className="mt-14">
+        <div className="mt-20">
           <FaqAccordion items={SITE_FAQ} title="Outras perguntas frequentes" />
         </div>
       </div>

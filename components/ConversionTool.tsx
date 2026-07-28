@@ -4,7 +4,6 @@ import Layout from "./Layout";
 import DropZone from "./DropZone";
 import SeoHead from "./SeoHead";
 import FaqList, { FaqItem } from "./FaqList";
-import AdBanner from "./AdBanner";
 import HowItWorks from "./HowItWorks";
 import WhyUseUs from "./WhyUseUs";
 import FormatComparisonTable from "./FormatComparisonTable";
@@ -75,8 +74,8 @@ export default function ConversionTool({ title, description, path, toFormat, faq
     setDimensions((prev) => ({ ...prev, [id]: { width: naturalWidth, height: naturalHeight } }));
   };
 
-  // mostra o tamanho de arquivo correspondente à imagem que está sendo exibida no momento
-  // (original ou convertida), junto com a dimensão mais recente lida do próprio <img>
+  // mostra o tamanho de arquivo correspondente ao que está selecionado no toggle
+  // (original ou convertida), junto com a dimensão mais recente lida do <img>
   const formatMeta = (item: ManagedFile, sizeOverride?: number) => {
     const dim = dimensions[item.id];
     const size = formatBytes(sizeOverride ?? item.file.size);
@@ -182,68 +181,15 @@ export default function ConversionTool({ title, description, path, toFormat, faq
             />
           )}
 
-          {/* uma imagem: mesma experiência de sempre, sem lista, com download individual */}
-          {files.length === 1 &&
-            (() => {
-              const item = files[0];
-              const r = results[item.id];
-              const showingResult = r?.status === "done" && !r.showOriginal;
-
-              return (
-                <div className="flex flex-col items-center gap-4">
-                  <img
-                    src={showingResult ? r!.resultUrl! : item.previewUrl}
-                    alt={showingResult ? "Imagem convertida" : "Pré-visualização"}
-                    onLoad={handlePreviewLoad(item.id)}
-                    className={`max-h-80 rounded-lg ${showingResult ? "border-2 border-accent" : "border border-border"}`}
-                  />
-
-                  {r?.status === "done" && (
-                    <button
-                      onClick={() => toggleOriginal(item.id)}
-                      className="text-sm text-muted underline underline-offset-2"
-                    >
-                      {r.showOriginal ? "Ver imagem convertida" : "Ver imagem original"}
-                    </button>
-                  )}
-
-                  <p className="font-mono text-xs text-muted">
-                    {item.file.name} · {showingResult ? "Convertida" : "Original"}:{" "}
-                    {formatMeta(item, showingResult ? r?.result?.size : undefined)}
-                  </p>
-
-                  {r?.status === "error" && <p className="text-sm text-red-600">{r.error}</p>}
-
-                  {r?.status !== "done" ? (
-                    <button
-                      onClick={convertAll}
-                      disabled={isConverting}
-                      className="rounded-full bg-accent px-6 py-2 font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
-                    >
-                      {isConverting ? "Convertendo..." : `Converter para ${toFormat.toUpperCase()}`}
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => handleDownload(item)}
-                      className="rounded-full bg-success px-6 py-2 font-medium text-white transition-colors hover:bg-success-hover"
-                    >
-                      Baixar imagem {toFormat.toUpperCase()}
-                    </button>
-                  )}
-
-                  <button onClick={handleReset} className="text-sm text-muted underline underline-offset-2">
-                    Escolher outra imagem
-                  </button>
-                </div>
-              );
-            })()}
-
-          {/* duas ou mais imagens: lista com progresso individual, download só via .zip ao final */}
-          {files.length > 1 && (
+          {/* qualquer quantidade de imagens (1 ou mais): mesma lista compacta.
+              Foco visual grande fica reservado para as ferramentas de edição. */}
+          {files.length > 0 && (
             <div className="flex flex-col gap-4">
-              <p className="text-sm text-muted">
-                {files.length} de {maxFiles} imagens selecionadas
-              </p>
+              {files.length > 1 && (
+                <p className="text-sm text-muted">
+                  {files.length} de {maxFiles} imagens selecionadas
+                </p>
+              )}
 
               <ul className="flex flex-col gap-3">
                 {files.map((item) => {
@@ -256,7 +202,7 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                             src={item.previewUrl}
                             alt={item.file.name}
                             onLoad={handlePreviewLoad(item.id)}
-                            className="h-14 w-14 rounded object-cover"
+                            className="h-16 w-16 shrink-0 rounded object-cover"
                           />
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm text-ink">{item.file.name}</p>
@@ -281,7 +227,7 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                           <img
                             src={item.previewUrl}
                             alt={item.file.name}
-                            className="h-14 w-14 rounded object-cover opacity-50"
+                            className="h-16 w-16 shrink-0 rounded object-cover opacity-50"
                           />
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm text-ink">{item.file.name}</p>
@@ -305,12 +251,21 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                               {formatMeta(item, r.showOriginal ? undefined : r.result?.size)}
                             </p>
                           </div>
-                          <button
-                            onClick={() => toggleOriginal(item.id)}
-                            className="shrink-0 text-sm text-muted underline underline-offset-2"
-                          >
-                            {r.showOriginal ? "Ver convertida" : "Ver original"}
-                          </button>
+                          <div className="flex shrink-0 items-center gap-2">
+                            <button
+                              onClick={() => toggleOriginal(item.id)}
+                              className="text-xs text-muted underline underline-offset-2"
+                            >
+                              {r.showOriginal ? "Ver convertida" : "Ver original"}
+                            </button>
+
+                            <button
+                              onClick={() => handleDownload(item)}
+                              className="rounded-full bg-success px-5 py-2 text-sm font-medium text-white hover:bg-success-hover"
+                            >
+                              Baixar
+                            </button>
+                          </div>
                         </div>
                       )}
                     </li>
@@ -325,44 +280,44 @@ export default function ConversionTool({ title, description, path, toFormat, faq
                   className="self-center rounded-full bg-accent px-6 py-2 font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50"
                 >
                   {isConverting
-                    ? `Convertendo ${(processingIndex ?? 0) + 1} de ${files.length}...`
-                    : `Converter ${files.length} imagens para ${toFormat.toUpperCase()}`}
+                    ? files.length > 1
+                      ? `Convertendo ${(processingIndex ?? 0) + 1} de ${files.length}...`
+                      : "Convertendo..."
+                    : files.length > 1
+                    ? `Converter ${files.length} imagens para ${toFormat.toUpperCase()}`
+                    : `Converter para ${toFormat.toUpperCase()}`}
                 </button>
               )}
 
-              {allDone && allSucceeded && (
+              {allDone && (
                 <div className="flex flex-col items-center gap-3">
-                  <button
-                    onClick={handleDownloadZip}
-                    disabled={isZipping}
-                    className="rounded-full bg-success px-6 py-2 font-medium text-white transition-colors hover:bg-success-hover disabled:opacity-50"
-                  >
-                    {isZipping ? "Preparando .zip..." : `Baixar ${files.length} imagens (.zip)`}
-                  </button>
+                  {files.length > 1 && allSucceeded && (
+                    <button
+                      onClick={handleDownloadZip}
+                      disabled={isZipping}
+                      className="rounded-full bg-success px-6 py-2 font-medium text-white transition-colors hover:bg-success-hover disabled:opacity-50"
+                    >
+                      {isZipping ? "Preparando .zip..." : `Baixar todas em um .zip`}
+                    </button>
+                  )}
+
                   {zipError && <p className="text-sm text-red-600">{zipError}</p>}
+
+                  {files.length > 1 && !allSucceeded && (
+                    <p className="text-center text-sm text-red-600">
+                      {errorCount} de {files.length} imagens não puderam ser convertidas — baixe as que deram certo
+                      individualmente acima, ou tente novamente com outro lote.
+                    </p>
+                  )}
+
                   <button onClick={handleReset} className="text-sm text-muted underline underline-offset-2">
                     Converter outras imagens
-                  </button>
-                </div>
-              )}
-
-              {allDone && !allSucceeded && (
-                <div className="flex flex-col items-center gap-3 text-center">
-                  <p className="text-sm text-red-600">
-                    {errorCount} de {files.length} imagens não puderam ser convertidas. Por isso o .zip com o lote
-                    não pôde ser gerado.
-                  </p>
-                  <button onClick={handleReset} className="text-sm text-muted underline underline-offset-2">
-                    Tentar novamente com outro lote
                   </button>
                 </div>
               )}
             </div>
           )}
         </div>
-
-        <AdBanner position="tool-below-editor" className="my-10" />
-        <AdBanner position="tool-above-faq" className="mb-8" />
 
         <FaqList items={faq} />
       </section>

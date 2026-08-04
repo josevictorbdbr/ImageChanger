@@ -69,8 +69,8 @@ export default function RedimensionarImagem() {
       />
 
       <section className="mx-auto max-w-2xl px-4 py-10">
-        <h1 className="text-3xl font-bold text-ink">Redimensionar imagem</h1>
-        <p className="mt-2 text-muted">
+        <h1 className="text-3xl font-bold text-ink text-center">Redimensionar imagem</h1>
+        <p className="mt-2 text-muted text-center">
           Escolha a nova largura e altura da sua imagem, sem perder qualidade desnecessariamente.
         </p>
 

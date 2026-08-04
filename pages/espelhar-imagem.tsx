@@ -52,8 +52,8 @@ export default function EspelharImagem() {
       />
 
       <section className="mx-auto max-w-2xl px-4 py-10">
-        <h1 className="text-3xl font-bold text-ink">Espelhar imagem</h1>
-        <p className="mt-2 text-muted">Inverta a imagem horizontalmente ou verticalmente.</p>
+        <h1 className="text-3xl font-bold text-ink text-center">Espelhar imagem</h1>
+        <p className="mt-2 text-muted text-center">Inverta a imagem horizontalmente ou verticalmente.</p>
 
         <div className="mt-8">
           {!file && (

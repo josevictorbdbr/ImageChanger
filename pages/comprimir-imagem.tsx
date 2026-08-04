@@ -66,8 +66,8 @@ export default function ComprimirImagem() {
       />
 
       <section className="mx-auto max-w-2xl px-4 py-10">
-        <h1 className="text-3xl font-bold text-ink">Comprimir imagem</h1>
-        <p className="mt-2 text-muted">Ajuste a qualidade e reduza o tamanho do arquivo. O resultado é salvo em JPG.</p>
+        <h1 className="text-3xl font-bold text-ink text-center">Comprimir imagem</h1>
+        <p className="mt-2 text-muted text-center">Ajuste a qualidade e reduza o tamanho do arquivo. O resultado é salvo em JPG.</p>
 
         <div className="mt-8">
           {!file && (
@@ -152,7 +152,6 @@ export default function ComprimirImagem() {
             </div>
           )}
         </div>
-
 
         <FaqList items={faq} />
       </section>

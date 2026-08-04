@@ -3,12 +3,7 @@ import JSZip from "jszip";
 import Layout from "./Layout";
 import DropZone from "./DropZone";
 import SeoHead from "./SeoHead";
-import FaqList, { FaqItem } from "./FaqList";
-import HowItWorks from "./HowItWorks";
-import WhyUseUs from "./WhyUseUs";
 import FormatComparisonTable from "./FormatComparisonTable";
-import FaqAccordion from "./FaqAccordion";
-import { SITE_FAQ } from "../utils/siteFaq";
 import { useMultiImageFiles, ManagedFile } from "../hooks/useMultiImageFiles";
 import { convertImage, ImageFormat } from "../tools/imageConverter";
 import { downloadBlob } from "../utils/downloadFile";
@@ -19,7 +14,8 @@ interface ConversionToolProps {
   description: string;
   path: string;
   toFormat: ImageFormat;
-  faq: FaqItem[];
+  about?: string[];
+  aboutTitle?: string;
 }
 
 type Status = "pending" | "converting" | "done" | "error";
@@ -56,7 +52,14 @@ function uniqueZipName(name: string, usedNames: Set<string>): string {
   return candidate;
 }
 
-export default function ConversionTool({ title, description, path, toFormat, faq }: ConversionToolProps) {
+export default function ConversionTool({
+  title,
+  description,
+  path,
+  toFormat,
+  about,
+  aboutTitle = "Sobre esta conversão",
+}: ConversionToolProps) {
   const { files, isDragging, addFiles, removeFile, reset, handleDrop, handleDragOver, handleDragLeave, maxFiles } =
     useMultiImageFiles();
   const [results, setResults] = useState<Record<string, FileResult>>({});
@@ -163,13 +166,13 @@ export default function ConversionTool({ title, description, path, toFormat, faq
 
   return (
     <Layout>
-      <SeoHead title={title} description={description} path={path} faq={faq} />
+      <SeoHead title={title} description={description} path={path} />
 
       <section className="mx-auto max-w-2xl px-4 py-10">
-        <h1 className="text-3xl font-bold text-ink">{title}</h1>
-        <p className="mt-2 text-muted">{description}</p>
+        <h1 className="text-3xl font-bold text-ink text-center">{title}</h1>
+        <p className="mt-2 text-muted text-center">{description}</p>
 
-        <div className="mt-8">
+        <div className="mt-10">
           {files.length === 0 && (
             <DropZone
               isDragging={isDragging}
@@ -319,26 +322,10 @@ export default function ConversionTool({ title, description, path, toFormat, faq
           )}
         </div>
 
-        <FaqList items={faq} />
-      </section>
-
-      <div className="mx-auto max-w-5xl px-4 pb-14">
-        <div className="mt-4">
-          <HowItWorks />
-        </div>
-
-        <div className="mt-20">
-          <WhyUseUs />
-        </div>
-
-        <div className="mt-20">
+        <div className="mx-auto max-w-5xl px-4 pb-14 mt-16">
           <FormatComparisonTable />
         </div>
-
-        <div className="mt-20">
-          <FaqAccordion items={SITE_FAQ} title="Outras perguntas frequentes" />
-        </div>
-      </div>
+      </section>
     </Layout>
   );
 }

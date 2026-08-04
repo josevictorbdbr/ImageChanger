@@ -105,24 +105,6 @@ export default function FormatSelector() {
         </button>
       </div>
 
-      <p className="mt-5 mb-2 text-center text-sm font-medium text-ink">
-        Conversões rápidas
-      </p>
-
-      <nav
-        aria-label="Todas as conversões disponíveis"
-        className="flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs text-muted"
-      >
-        {CONVERSIONS.map((c) => (
-          <Link
-            key={c.path}
-            href={c.path}
-            className="underline underline-offset-2 hover:text-accent"
-          >
-            {LABELS[c.from]} → {LABELS[c.to]}
-          </Link>
-        ))}
-      </nav>
     </div>
   );
 }

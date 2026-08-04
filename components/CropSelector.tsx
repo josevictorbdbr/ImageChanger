@@ -88,11 +88,12 @@ export default function CropSelector({ imageUrl, onChange }: CropSelectorProps) 
     dragRef.current = null;
   };
 
+  // Posições com suporte a mobile (offsets de -3 / -12px) e desktop (offsets de -1.5 / -7px)
   const corners: { key: Handle; className: string }[] = [
-    { key: "nw", className: "-left-1.5 -top-1.5 cursor-nwse-resize" },
-    { key: "ne", className: "-right-1.5 -top-1.5 cursor-nesw-resize" },
-    { key: "sw", className: "-left-1.5 -bottom-1.5 cursor-nesw-resize" },
-    { key: "se", className: "-right-1.5 -bottom-1.5 cursor-nwse-resize" },
+    { key: "nw", className: "-left-3 -top-3 md:-left-1.5 md:-top-1.5 cursor-nwse-resize" },
+    { key: "ne", className: "-right-3 -top-3 md:-right-1.5 md:-top-1.5 cursor-nesw-resize" },
+    { key: "sw", className: "-left-3 -bottom-3 md:-left-1.5 md:-bottom-1.5 cursor-nesw-resize" },
+    { key: "se", className: "-right-3 -bottom-3 md:-right-1.5 md:-bottom-1.5 cursor-nwse-resize" },
   ];
 
   return (
@@ -122,7 +123,7 @@ export default function CropSelector({ imageUrl, onChange }: CropSelectorProps) 
               onPointerMove={handlePointerMove}
               onPointerUp={endDrag}
               onPointerCancel={endDrag}
-              className={`absolute h-4 w-4 rounded-full border-2 border-white bg-accent shadow ${className}`}
+              className={`absolute h-6 w-6 md:h-3.5 md:w-3.5 rounded-full border-2 border-white bg-accent shadow ${className}`}
             />
           ))}
         </div>

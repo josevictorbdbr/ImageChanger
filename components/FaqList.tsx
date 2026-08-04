@@ -6,7 +6,7 @@ export interface FaqItem {
 export default function FaqList({ items }: { items: FaqItem[] }) {
   return (
     <div className="mt-14">
-      <h2 className="text-xl font-semibold text-ink">Perguntas frequentes</h2>
+      <h2 className="text-xl font-semibold text-ink text-center">Perguntas frequentes</h2>
       <dl className="mt-4 space-y-5">
         {items.map((item) => (
           <div key={item.question}>

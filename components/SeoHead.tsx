@@ -25,11 +25,29 @@ export default function SeoHead({ title, description, path, faq, noindex }: SeoH
       <link rel="canonical" href={url} />
       {noindex && <meta name="robots" content="noindex" />}
 
+      {/* Meta Tag para identificar o nome da marca */}
+      <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={url} />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
+
+      {/* Injeta o Schema de WebSite na página inicial para definir o Nome do Site no Google */}
+      {path === "/" && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: SITE_NAME,
+              alternateName: "Image Changer",
+              url: SITE_URL,
+            }),
+          }}
+        />
+      )}
 
       {faq && faq.length > 0 && (
         <script

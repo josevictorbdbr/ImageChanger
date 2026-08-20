@@ -8,6 +8,8 @@ import { useMultiImageFiles, ManagedFile } from "../hooks/useMultiImageFiles";
 import { convertImage, ImageFormat } from "../tools/imageConverter";
 import { downloadBlob } from "../utils/downloadFile";
 import { formatBytes, replaceExtension } from "../utils/formatBytes";
+import { useLocale } from "../utils/i18n";
+import { conversionToolText } from "../locales/conversionTool";
 
 interface ConversionToolProps {
   title: string;
@@ -58,8 +60,12 @@ export default function ConversionTool({
   path,
   toFormat,
   about,
-  aboutTitle = "Sobre esta conversão",
+  aboutTitle,
 }: ConversionToolProps) {
+  const locale = useLocale();
+  const t = conversionToolText[locale];
+  const resolvedAboutTitle = aboutTitle ?? t.aboutTitleDefault;
+
   const { files, isDragging, addFiles, removeFile, reset, handleDrop, handleDragOver, handleDragLeave, maxFiles } =
     useMultiImageFiles();
   const [results, setResults] = useState<Record<string, FileResult>>({});
@@ -108,7 +114,7 @@ export default function ConversionTool({
       } catch {
         setResults((prev) => ({
           ...prev,
-          [item.id]: { status: "error", error: "Não foi possível converter esta imagem.", showOriginal: false },
+          [item.id]: { status: "error", error: t.conversionError, showOriginal: false },
         }));
       }
     }
@@ -144,7 +150,7 @@ export default function ConversionTool({
       const zipBlob = await zip.generateAsync({ type: "blob" });
       downloadBlob(zipBlob, `imagens-convertidas-${toFormat}.zip`);
     } catch {
-      setZipError("Não foi possível gerar o arquivo .zip. Tente novamente.");
+      setZipError(t.zipError);
     } finally {
       setIsZipping(false);
     }
@@ -188,11 +194,7 @@ export default function ConversionTool({
               Foco visual grande fica reservado para as ferramentas de edição. */}
           {files.length > 0 && (
             <div className="flex flex-col gap-4">
-              {files.length > 1 && (
-                <p className="text-sm text-muted">
-                  {files.length} de {maxFiles} imagens selecionadas
-                </p>
-              )}
+              {files.length > 1 && <p className="text-sm text-muted">{t.filesSelected(files.length, maxFiles)}</p>}
 
               <ul className="flex flex-col gap-3">
                 {files.map((item) => {
@@ -210,13 +212,13 @@ export default function ConversionTool({
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm text-ink">{item.file.name}</p>
                             <p className="font-mono text-xs text-muted">
-                              {r?.status === "converting" ? "Convertendo..." : formatMeta(item)}
+                              {r?.status === "converting" ? t.converting : formatMeta(item)}
                             </p>
                           </div>
                           {!isConverting && (
                             <button
                               onClick={() => removeFile(item.id)}
-                              aria-label={`Remover ${item.file.name}`}
+                              aria-label={t.removeAria(item.file.name)}
                               className="shrink-0 text-muted hover:text-accent"
                             >
                               ✕
@@ -250,7 +252,7 @@ export default function ConversionTool({
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm text-ink">{item.file.name}</p>
                             <p className="font-mono text-xs text-muted">
-                              {r.showOriginal ? "Original" : "Convertida"}:{" "}
+                              {r.showOriginal ? t.original : t.converted}:{" "}
                               {formatMeta(item, r.showOriginal ? undefined : r.result?.size)}
                             </p>
                           </div>
@@ -259,14 +261,14 @@ export default function ConversionTool({
                               onClick={() => toggleOriginal(item.id)}
                               className="text-xs text-muted underline underline-offset-2"
                             >
-                              {r.showOriginal ? "Ver convertida" : "Ver original"}
+                              {r.showOriginal ? t.viewConverted : t.viewOriginal}
                             </button>
 
                             <button
                               onClick={() => handleDownload(item)}
                               className="rounded-full bg-success px-5 py-2 text-sm font-medium text-white hover:bg-success-hover"
                             >
-                              Baixar
+                              {t.download}
                             </button>
                           </div>
                         </div>
@@ -284,11 +286,11 @@ export default function ConversionTool({
                 >
                   {isConverting
                     ? files.length > 1
-                      ? `Convertendo ${(processingIndex ?? 0) + 1} de ${files.length}...`
-                      : "Convertendo..."
+                      ? t.convertingMultiple((processingIndex ?? 0) + 1, files.length)
+                      : t.converting
                     : files.length > 1
-                    ? `Converter ${files.length} imagens para ${toFormat.toUpperCase()}`
-                    : `Converter para ${toFormat.toUpperCase()}`}
+                    ? t.convertMultipleButton(files.length, toFormat.toUpperCase())
+                    : t.convertSingleButton(toFormat.toUpperCase())}
                 </button>
               )}
 
@@ -300,21 +302,18 @@ export default function ConversionTool({
                       disabled={isZipping}
                       className="rounded-full bg-success px-6 py-2 font-medium text-white transition-colors hover:bg-success-hover disabled:opacity-50"
                     >
-                      {isZipping ? "Preparando .zip..." : `Baixar todas em um .zip`}
+                      {isZipping ? t.zipPreparing : t.zipDownloadAll}
                     </button>
                   )}
 
                   {zipError && <p className="text-sm text-red-600">{zipError}</p>}
 
                   {files.length > 1 && !allSucceeded && (
-                    <p className="text-center text-sm text-red-600">
-                      {errorCount} de {files.length} imagens não puderam ser convertidas — baixe as que deram certo
-                      individualmente acima, ou tente novamente com outro lote.
-                    </p>
+                    <p className="text-center text-sm text-red-600">{t.partialErrorMessage(errorCount, files.length)}</p>
                   )}
 
                   <button onClick={handleReset} className="text-sm text-muted underline underline-offset-2">
-                    Converter outras imagens
+                    {t.convertAgain}
                   </button>
                 </div>
               )}

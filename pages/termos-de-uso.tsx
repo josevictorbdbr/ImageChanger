@@ -1,6 +1,76 @@
 import LegalLayout from "../components/LegalLayout";
+import { useLocale } from "../utils/i18n";
 
 export default function TermosDeUso() {
+  const locale = useLocale();
+
+  if (locale === "en") {
+    return (
+      <LegalLayout
+        title="Terms of Use"
+        path="/termos-de-uso"
+        updatedAt="08/07/2026"
+        description="Terms of use for Image Changer: a free, browser-based image conversion and editing tool."
+      >
+        <p>
+          By using Image Changer, you agree to the terms described below. If you don't agree, please don't use the
+          site.
+        </p>
+
+        <h2>What is Image Changer</h2>
+        <p>
+          Image Changer is a free tool for basic image conversion and editing (PNG, JPG, and WebP) that works
+          entirely in your browser, with no registration required.
+        </p>
+
+        <h2>Permitted use</h2>
+        <p>
+          You may use the site to convert and edit images you own or have the right to use. It is prohibited to use
+          Image Changer to process illegal or offensive content, or content that violates third-party rights.
+        </p>
+
+        <h2>Ownership of images</h2>
+        <p>
+          All processed images belong to you. Since processing happens locally in your browser, we never have
+          access to, copies of, or control over these files.
+        </p>
+
+        <h2>Service availability</h2>
+        <p>
+          Image Changer is offered free of charge, "as is," with no guarantees of continuous availability,
+          error-free operation, or fitness for a particular purpose. The service may go offline or change at any
+          time, without prior notice.
+        </p>
+
+        <h2>Limitation of liability</h2>
+        <p>
+          We are not liable for any losses or damages arising from the use or inability to use the site, including
+          any loss of images during processing.
+        </p>
+
+        <h2>Site intellectual property</h2>
+        <p>
+          The code, design, brand, and content of Image Changer belong to its owner and may not be copied or
+          redistributed without authorization.
+        </p>
+
+        <h2>Changes to these terms</h2>
+        <p>
+          These terms may be updated periodically. Continued use of the site after an update constitutes acceptance
+          of the new terms.
+        </p>
+
+        <h2>Governing law</h2>
+        <p>These terms are governed by the laws of the Federative Republic of Brazil.</p>
+
+        <h2>Contact</h2>
+        <p>
+          Questions about these terms can be sent to <a href="mailto:josevictorbdbr@gmail.com">josevictorbdbr@gmail.com</a>.
+        </p>
+      </LegalLayout>
+    );
+  }
+
   return (
     <LegalLayout title="Termos de Uso" path="/termos-de-uso" updatedAt="08/07/2026">
       <p>

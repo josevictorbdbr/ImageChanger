@@ -8,13 +8,8 @@ import { useObjectUrl } from "../hooks/useObjectUrl";
 import { compressImage } from "../tools/imageEditor";
 import { downloadBlob } from "../utils/downloadFile";
 import { formatBytes } from "../utils/formatBytes";
-
-const faq = [
-  {
-    question: "Por que o resultado é sempre em JPG?",
-    answer: "A compressão com controle de qualidade é uma característica do formato JPG. Para manter transparência, use a ferramenta de conversão para WebP.",
-  },
-];
+import { useLocale } from "../utils/i18n";
+import { comprimirImagemText } from "../locales/pages/comprimir-imagem";
 
 interface Dimensions {
   width: number;
@@ -22,6 +17,9 @@ interface Dimensions {
 }
 
 export default function ComprimirImagem() {
+  const locale = useLocale();
+  const t = comprimirImagemText[locale];
+
   const { file, previewUrl, isDragging, selectFile, reset, handleDrop, handleDragOver, handleDragLeave } =
     useImageFile();
   const [quality, setQuality] = useState(0.7);
@@ -44,7 +42,7 @@ export default function ComprimirImagem() {
     try {
       setResult(await compressImage(file, quality));
     } catch {
-      alert("Não foi possível comprimir esta imagem.");
+      alert(t.errorMessage);
     } finally {
       setIsProcessing(false);
     }
@@ -53,21 +51,16 @@ export default function ComprimirImagem() {
   const handleDownload = () => {
     if (!result || !file) return;
     const name = file.name.replace(/\.[^.]+$/, "");
-    downloadBlob(result, `${name}-comprimida.jpg`);
+    downloadBlob(result, `${name}-${t.downloadSuffix}.jpg`);
   };
 
   return (
     <Layout>
-      <SeoHead
-        title="Comprimir imagem"
-        description="Comprima imagens gratuitamente, direto no navegador, reduzindo o tamanho do arquivo com controle de qualidade."
-        path="/comprimir-imagem"
-        faq={faq}
-      />
+      <SeoHead title={t.seoTitle} description={t.seoDescription} path="/comprimir-imagem" faq={t.faq} />
 
       <section className="mx-auto max-w-2xl px-4 py-10">
-        <h1 className="text-3xl font-bold text-ink text-center">Comprimir imagem</h1>
-        <p className="mt-2 text-muted text-center">Ajuste a qualidade e reduza o tamanho do arquivo. O resultado é salvo em JPG.</p>
+        <h1 className="text-3xl font-bold text-ink text-center">{t.title}</h1>
+        <p className="mt-2 text-muted text-center">{t.subtitle}</p>
 
         <div className="mt-8">
           {!file && (
@@ -84,7 +77,7 @@ export default function ComprimirImagem() {
             <div className="flex flex-col items-center gap-4">
               <img
                 src={resultUrl && !showOriginal ? resultUrl : previewUrl}
-                alt={resultUrl && !showOriginal ? "Imagem comprimida" : "Pré-visualização"}
+                alt={resultUrl && !showOriginal ? t.compressedAlt : t.previewAlt}
                 onLoad={handlePreviewLoad}
                 className={`max-h-80 rounded-lg border ${
                   resultUrl && !showOriginal ? "border-accent" : "border-border"
@@ -96,17 +89,17 @@ export default function ComprimirImagem() {
                   onClick={() => setShowOriginal((v) => !v)}
                   className="text-sm text-muted underline underline-offset-2"
                 >
-                  {showOriginal ? "Ver imagem comprimida" : "Ver imagem original"}
+                  {showOriginal ? t.viewCompressed : t.viewOriginal}
                 </button>
               )}
 
               <p className="font-mono text-xs text-muted">
-                Original: {formatBytes(file.size)}
+                {t.original}: {formatBytes(file.size)}
                 {dimensions && ` · ${dimensions.width}×${dimensions.height}`}
               </p>
 
               <label className="flex w-full max-w-xs flex-col text-sm text-muted">
-                Qualidade: {Math.round(quality * 100)}%
+                {t.quality}: {Math.round(quality * 100)}%
                 <input
                   type="range"
                   min={0.1}
@@ -124,16 +117,18 @@ export default function ComprimirImagem() {
                   disabled={isProcessing}
                   className="rounded-full bg-accent px-6 py-2 font-medium text-white hover:bg-accent-hover disabled:opacity-50"
                 >
-                  {isProcessing ? "Processando..." : "Comprimir imagem"}
+                  {isProcessing ? t.processing : t.compressButton}
                 </button>
               ) : (
                 <div className="flex flex-col items-center gap-2">
-                  <p className="font-mono text-xs text-muted">Novo tamanho: {formatBytes(result.size)}</p>
+                  <p className="font-mono text-xs text-muted">
+                    {t.newSize}: {formatBytes(result.size)}
+                  </p>
                   <button
                     onClick={handleDownload}
                     className="rounded-full bg-success px-6 py-2 font-medium text-white hover:bg-success-hover"
                   >
-                    Baixar imagem
+                    {t.downloadButton}
                   </button>
                 </div>
               )}
@@ -147,13 +142,13 @@ export default function ComprimirImagem() {
                 }}
                 className="text-sm text-muted underline underline-offset-2"
               >
-                Escolher outra imagem
+                {t.chooseAnother}
               </button>
             </div>
           )}
         </div>
 
-        <FaqList items={faq} />
+        <FaqList items={t.faq as unknown as { question: string; answer: string }[]} />
       </section>
     </Layout>
   );

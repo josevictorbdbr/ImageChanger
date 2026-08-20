@@ -1,0 +1,46 @@
+export const girarImagemText = {
+  "pt-BR": {
+    seoTitle: "Girar imagem",
+    seoDescription: "Gire imagens em 90°, 180° ou 270° gratuitamente, direto no navegador.",
+    title: "Girar imagem",
+    subtitle: "Escolha o ângulo de rotação e baixe a imagem girada.",
+    processing: "Processando...",
+    rotateButton: "Girar imagem",
+    downloadButton: "Baixar imagem",
+    downloadSuffix: "girada",
+    viewRotated: "Ver imagem girada",
+    viewOriginal: "Ver imagem original",
+    chooseAnother: "Escolher outra imagem",
+    errorMessage: "Não foi possível girar esta imagem.",
+    rotatedAlt: "Imagem girada",
+    previewAlt: "Pré-visualização",
+    faq: [
+      {
+        question: "A qualidade da imagem muda ao girar?",
+        answer: "Não. A rotação apenas reorganiza os pixels, sem recompressão perceptível.",
+      },
+    ],
+  },
+  en: {
+    seoTitle: "Rotate image",
+    seoDescription: "Rotate images by 90°, 180° or 270° for free, directly in your browser.",
+    title: "Rotate image",
+    subtitle: "Choose the rotation angle and download the rotated image.",
+    processing: "Processing...",
+    rotateButton: "Rotate image",
+    downloadButton: "Download image",
+    downloadSuffix: "rotated",
+    viewRotated: "View rotated image",
+    viewOriginal: "View original image",
+    chooseAnother: "Choose another image",
+    errorMessage: "Couldn't rotate this image.",
+    rotatedAlt: "Rotated image",
+    previewAlt: "Preview",
+    faq: [
+      {
+        question: "Does rotating change the image quality?",
+        answer: "No. Rotation only rearranges pixels, with no noticeable recompression.",
+      },
+    ],
+  },
+} as const;

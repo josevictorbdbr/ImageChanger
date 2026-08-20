@@ -1,4 +1,6 @@
 import { ChangeEvent } from "react";
+import { useLocale } from "../utils/i18n";
+import { common } from "../locales/common";
 
 interface DropZoneProps {
   isDragging: boolean;
@@ -21,6 +23,9 @@ export default function DropZone({
   multiple = false,
   accept = "image/*",
 }: DropZoneProps) {
+  const locale = useLocale();
+  const t = common[locale];
+
   const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
     const fileList = e.target.files;
     if (!fileList || fileList.length === 0) return;
@@ -40,14 +45,9 @@ export default function DropZone({
         isDragging ? "border-accent bg-accent/5" : "border-border hover:border-accent/50"
       }`}
     >
-      <span className="font-medium text-ink">
-        {multiple ? "Arraste imagens aqui ou clique para selecionar" : "Arraste uma imagem aqui ou clique para selecionar"}
-      </span>
-      <span className="font-mono text-xs text-muted">
-        {multiple ? "Até 5 imagens · PNG · JPG · WebP" : "PNG · JPG · WebP"}
-      </span>
+      <span className="font-medium text-ink">{multiple ? t.dropZoneMultiple : t.dropZoneSingle}</span>
+      <span className="font-mono text-xs text-muted">{multiple ? t.dropZoneHintMultiple : t.dropZoneHintSingle}</span>
       <input type="file" accept={accept} multiple={multiple} className="hidden" onChange={handleInput} />
     </label>
   );
 }
-

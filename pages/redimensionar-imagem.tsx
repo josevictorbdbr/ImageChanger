@@ -7,17 +7,8 @@ import { useImageFile } from "../hooks/useImageFile";
 import { useObjectUrl } from "../hooks/useObjectUrl";
 import { resizeImage } from "../tools/imageEditor";
 import { downloadBlob } from "../utils/downloadFile";
-
-const faq = [
-  {
-    question: "A imagem fica distorcida?",
-    answer: "Se a proporção informada for diferente da original, a imagem pode ficar esticada. Mantenha a proporção para evitar isso.",
-  },
-  {
-    question: "Posso aumentar o tamanho da imagem?",
-    answer: "Sim, mas aumentar muito uma imagem pequena pode deixá-la borrada, já que não há pixels novos sendo criados.",
-  },
-];
+import { useLocale } from "../utils/i18n";
+import { redimensionarImagemText } from "../locales/pages/redimensionar-imagem";
 
 interface Dimensions {
   width: number;
@@ -25,6 +16,9 @@ interface Dimensions {
 }
 
 export default function RedimensionarImagem() {
+  const locale = useLocale();
+  const t = redimensionarImagemText[locale];
+
   const { file, previewUrl, isDragging, selectFile, reset, handleDrop, handleDragOver, handleDragLeave } =
     useImageFile();
   const [width, setWidth] = useState(800);
@@ -47,7 +41,7 @@ export default function RedimensionarImagem() {
     try {
       setResult(await resizeImage(file, width, height));
     } catch {
-      alert("Não foi possível redimensionar esta imagem.");
+      alert(t.errorMessage);
     } finally {
       setIsProcessing(false);
     }
@@ -56,23 +50,16 @@ export default function RedimensionarImagem() {
   const handleDownload = () => {
     if (!result || !file) return;
     const [name, ext] = [file.name.replace(/\.[^.]+$/, ""), file.name.split(".").pop()];
-    downloadBlob(result, `${name}-redimensionada.${ext}`);
+    downloadBlob(result, `${name}-${t.downloadSuffix}.${ext}`);
   };
 
   return (
     <Layout>
-      <SeoHead
-        title="Redimensionar imagem"
-        description="Redimensione imagens gratuitamente, direto no navegador, definindo a largura e a altura desejadas."
-        path="/redimensionar-imagem"
-        faq={faq}
-      />
+      <SeoHead title={t.seoTitle} description={t.seoDescription} path="/redimensionar-imagem" faq={t.faq} />
 
       <section className="mx-auto max-w-2xl px-4 py-10">
-        <h1 className="text-3xl font-bold text-ink text-center">Redimensionar imagem</h1>
-        <p className="mt-2 text-muted text-center">
-          Escolha a nova largura e altura da sua imagem, sem perder qualidade desnecessariamente.
-        </p>
+        <h1 className="text-3xl font-bold text-ink text-center">{t.title}</h1>
+        <p className="mt-2 text-muted text-center">{t.subtitle}</p>
 
         <div className="mt-8">
           {!file && (
@@ -89,7 +76,7 @@ export default function RedimensionarImagem() {
             <div className="flex flex-col items-center gap-4">
               <img
                 src={resultUrl && !showOriginal ? resultUrl : previewUrl}
-                alt={resultUrl && !showOriginal ? "Imagem redimensionada" : "Pré-visualização"}
+                alt={resultUrl && !showOriginal ? t.resizedAlt : t.previewAlt}
                 onLoad={handlePreviewLoad}
                 className={`max-h-80 rounded-lg border ${
                   resultUrl && !showOriginal ? "border-accent" : "border-border"
@@ -101,19 +88,19 @@ export default function RedimensionarImagem() {
                   onClick={() => setShowOriginal((v) => !v)}
                   className="text-sm text-muted underline underline-offset-2"
                 >
-                  {showOriginal ? "Ver imagem redimensionada" : "Ver imagem original"}
+                  {showOriginal ? t.viewResized : t.viewOriginal}
                 </button>
               )}
 
               {dimensions && (
                 <p className="font-mono text-xs text-muted">
-                  {showOriginal || !resultUrl ? "Original" : "Redimensionada"}: {dimensions.width}×{dimensions.height}
+                  {showOriginal || !resultUrl ? t.original : t.resizedLabel}: {dimensions.width}×{dimensions.height}
                 </p>
               )}
 
               <div className="flex items-center gap-3">
                 <label className="flex flex-col text-sm text-muted">
-                  Largura (px)
+                  {t.widthLabel}
                   <input
                     type="number"
                     value={width}
@@ -122,7 +109,7 @@ export default function RedimensionarImagem() {
                   />
                 </label>
                 <label className="flex flex-col text-sm text-muted">
-                  Altura (px)
+                  {t.heightLabel}
                   <input
                     type="number"
                     value={height}
@@ -138,14 +125,14 @@ export default function RedimensionarImagem() {
                   disabled={isProcessing}
                   className="rounded-full bg-accent px-6 py-2 font-medium text-white hover:bg-accent-hover disabled:opacity-50"
                 >
-                  {isProcessing ? "Processando..." : "Redimensionar"}
+                  {isProcessing ? t.processing : t.resizeButton}
                 </button>
               ) : (
                 <button
                   onClick={handleDownload}
                   className="rounded-full bg-success px-6 py-2 font-medium text-white hover:bg-success-hover"
                 >
-                  Baixar imagem
+                  {t.downloadButton}
                 </button>
               )}
 
@@ -158,14 +145,13 @@ export default function RedimensionarImagem() {
                 }}
                 className="text-sm text-muted underline underline-offset-2"
               >
-                Escolher outra imagem
+                {t.chooseAnother}
               </button>
             </div>
           )}
         </div>
 
-
-        <FaqList items={faq} />
+        <FaqList items={t.faq as unknown as { question: string; answer: string }[]} />
       </section>
     </Layout>
   );

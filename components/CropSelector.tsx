@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CropArea } from "../tools/imageEditor";
+import { useLocale } from "../utils/i18n";
+import { common } from "../locales/common";
 
 interface CropSelectorProps {
   imageUrl: string;
@@ -16,6 +18,8 @@ function clamp(value: number, min: number, max: number) {
 }
 
 export default function CropSelector({ imageUrl, onChange }: CropSelectorProps) {
+  const locale = useLocale();
+  const t = common[locale];
   const imgRef = useRef<HTMLImageElement>(null);
   const dragRef = useRef<{ handle: Handle; startX: number; startY: number; startBox: Box } | null>(null);
 
@@ -101,7 +105,7 @@ export default function CropSelector({ imageUrl, onChange }: CropSelectorProps) 
       <img
         ref={imgRef}
         src={imageUrl}
-        alt="Pré-visualização"
+        alt={t.previewAlt}
         onLoad={handleImageLoad}
         draggable={false}
         className="max-h-80 rounded-lg border border-border"

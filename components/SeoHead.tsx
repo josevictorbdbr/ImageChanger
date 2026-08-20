@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { SITE_URL, SITE_NAME } from "../utils/siteConfig";
 
 interface FaqItem {
@@ -15,7 +16,15 @@ interface SeoHeadProps {
 }
 
 export default function SeoHead({ title, description, path, faq, noindex }: SeoHeadProps) {
-  const url = `${SITE_URL}${path}`;
+  const { locale } = useRouter();
+  const currentLocale = locale === "en" ? "en" : "pt-BR";
+
+  // path já vem sem prefixo de idioma (ex: "/jpg-para-png" ou "/").
+  // A versão en é sempre a mesma rota com /en na frente.
+  const ptUrl = `${SITE_URL}${path}`;
+  const enUrl = path === "/" ? `${SITE_URL}/en` : `${SITE_URL}/en${path}`;
+  const url = currentLocale === "en" ? enUrl : ptUrl;
+
   const fullTitle = path === "/" ? title : `${title} | ${SITE_NAME}`;
 
   return (
@@ -23,6 +32,9 @@ export default function SeoHead({ title, description, path, faq, noindex }: SeoH
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={url} />
+      <link rel="alternate" hrefLang="pt-BR" href={ptUrl} />
+      <link rel="alternate" hrefLang="en" href={enUrl} />
+      <link rel="alternate" hrefLang="x-default" href={ptUrl} />
       {noindex && <meta name="robots" content="noindex" />}
 
       {/* Meta Tag para identificar o nome da marca */}

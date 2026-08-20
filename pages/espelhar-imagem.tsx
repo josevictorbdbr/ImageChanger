@@ -7,15 +7,13 @@ import { useImageFile } from "../hooks/useImageFile";
 import { useObjectUrl } from "../hooks/useObjectUrl";
 import { flipImage } from "../tools/imageEditor";
 import { downloadBlob } from "../utils/downloadFile";
-
-const faq = [
-  {
-    question: "Espelhar altera a qualidade da imagem?",
-    answer: "Não, é apenas uma inversão dos pixels, sem perda de qualidade.",
-  },
-];
+import { useLocale } from "../utils/i18n";
+import { espelharImagemText } from "../locales/pages/espelhar-imagem";
 
 export default function EspelharImagem() {
+  const locale = useLocale();
+  const t = espelharImagemText[locale];
+
   const { file, previewUrl, isDragging, selectFile, reset, handleDrop, handleDragOver, handleDragLeave } =
     useImageFile();
   const [direction, setDirection] = useState<"horizontal" | "vertical">("horizontal");
@@ -30,7 +28,7 @@ export default function EspelharImagem() {
     try {
       setResult(await flipImage(file, direction));
     } catch {
-      alert("Não foi possível espelhar esta imagem.");
+      alert(t.errorMessage);
     } finally {
       setIsProcessing(false);
     }
@@ -39,21 +37,16 @@ export default function EspelharImagem() {
   const handleDownload = () => {
     if (!result || !file) return;
     const [name, ext] = [file.name.replace(/\.[^.]+$/, ""), file.name.split(".").pop()];
-    downloadBlob(result, `${name}-espelhada.${ext}`);
+    downloadBlob(result, `${name}-${t.downloadSuffix}.${ext}`);
   };
 
   return (
     <Layout>
-      <SeoHead
-        title="Espelhar imagem"
-        description="Espelhe imagens na horizontal ou na vertical gratuitamente, direto no navegador."
-        path="/espelhar-imagem"
-        faq={faq}
-      />
+      <SeoHead title={t.seoTitle} description={t.seoDescription} path="/espelhar-imagem" faq={t.faq} />
 
       <section className="mx-auto max-w-2xl px-4 py-10">
-        <h1 className="text-3xl font-bold text-ink text-center">Espelhar imagem</h1>
-        <p className="mt-2 text-muted text-center">Inverta a imagem horizontalmente ou verticalmente.</p>
+        <h1 className="text-3xl font-bold text-ink text-center">{t.title}</h1>
+        <p className="mt-2 text-muted text-center">{t.subtitle}</p>
 
         <div className="mt-8">
           {!file && (
@@ -70,7 +63,7 @@ export default function EspelharImagem() {
             <div className="flex flex-col items-center gap-4">
               <img
                 src={resultUrl && !showOriginal ? resultUrl : previewUrl}
-                alt={resultUrl && !showOriginal ? "Imagem espelhada" : "Pré-visualização"}
+                alt={resultUrl && !showOriginal ? t.flippedAlt : t.previewAlt}
                 className={`max-h-80 rounded-lg border ${
                   resultUrl && !showOriginal ? "border-accent" : "border-border"
                 }`}
@@ -81,7 +74,7 @@ export default function EspelharImagem() {
                   onClick={() => setShowOriginal((v) => !v)}
                   className="text-sm text-muted underline underline-offset-2"
                 >
-                  {showOriginal ? "Ver imagem espelhada" : "Ver imagem original"}
+                  {showOriginal ? t.viewFlipped : t.viewOriginal}
                 </button>
               )}
 
@@ -94,7 +87,7 @@ export default function EspelharImagem() {
                       direction === d ? "bg-accent text-white" : "border border-border text-muted"
                     }`}
                   >
-                    {d === "horizontal" ? "Horizontal" : "Vertical"}
+                    {d === "horizontal" ? t.horizontal : t.vertical}
                   </button>
                 ))}
               </div>
@@ -105,14 +98,14 @@ export default function EspelharImagem() {
                   disabled={isProcessing}
                   className="rounded-full bg-accent px-6 py-2 font-medium text-white hover:bg-accent-hover disabled:opacity-50"
                 >
-                  {isProcessing ? "Processando..." : "Espelhar imagem"}
+                  {isProcessing ? t.processing : t.flipButton}
                 </button>
               ) : (
                 <button
                   onClick={handleDownload}
                   className="rounded-full bg-success px-6 py-2 font-medium text-white hover:bg-success-hover"
                 >
-                  Baixar imagem
+                  {t.downloadButton}
                 </button>
               )}
 
@@ -124,13 +117,13 @@ export default function EspelharImagem() {
                 }}
                 className="text-sm text-muted underline underline-offset-2"
               >
-                Escolher outra imagem
+                {t.chooseAnother}
               </button>
             </div>
           )}
         </div>
 
-        <FaqList items={faq} />
+        <FaqList items={t.faq as unknown as { question: string; answer: string }[]} />
       </section>
     </Layout>
   );

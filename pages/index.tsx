@@ -6,76 +6,46 @@ import HowItWorks from "../components/HowItWorks";
 import WhyUseUs from "../components/WhyUseUs";
 import FaqAccordion from "../components/FaqAccordion";
 import { SITE_FAQ } from "../utils/siteFaq";
+import { useLocale } from "../utils/i18n";
+import { homeText } from "../locales/pages/index";
 import { CropIcon, ResizeIcon, CompressIcon, RotateIcon, FlipIcon } from "../components/icons/ToolIcons";
 
-const editing = [
-  {
-    href: "/cortar-imagem",
-    title: "Cortar imagem",
-    description: "Recorte a área que você quiser manter.",
-    icon: <CropIcon />,
-  },
-  {
-    href: "/redimensionar-imagem",
-    title: "Redimensionar imagem",
-    description: "Altere a largura e a altura da imagem.",
-    icon: <ResizeIcon />,
-  },
-  {
-    href: "/comprimir-imagem",
-    title: "Comprimir imagem",
-    description: "Diminua o tamanho do arquivo ajustando a qualidade.",
-    icon: <CompressIcon />,
-  },
-  {
-    href: "/girar-imagem",
-    title: "Girar imagem",
-    description: "Rotacione em 90°, 180° ou 270°.",
-    icon: <RotateIcon />,
-  },
-  {
-    href: "/espelhar-imagem",
-    title: "Espelhar imagem",
-    description: "Inverta horizontalmente ou verticalmente.",
-    icon: <FlipIcon />,
-  },
-];
+// Ícones não têm idioma, então ficam num array separado, na mesma ordem
+// dos itens de locales/pages/index.ts -> editingTools.
+const EDITING_ICONS = [<CropIcon key="crop" />, <ResizeIcon key="resize" />, <CompressIcon key="compress" />, <RotateIcon key="rotate" />, <FlipIcon key="flip" />];
 
 export default function Home() {
+  const locale = useLocale();
+  const t = homeText[locale];
+  const faq = SITE_FAQ[locale];
+
   return (
     <Layout>
-      <SeoHead
-        title="Image Changer — Converta e edite imagens grátis, no navegador"
-        description="Converta e edite imagens PNG, JPG e WebP gratuitamente, sem cadastro. Todo o processamento acontece no seu navegador."
-        path="/"
-        faq={SITE_FAQ}
-      />
+      <SeoHead title={t.seoTitle} description={t.seoDescription} path="/" faq={faq} />
 
       <section className="bg-dot-grid bg-dot-grid border-b border-border">
         <div className="mx-auto max-w-5xl px-4 py-16 text-center">
           <h1 className="font-display text-4xl font-bold text-ink sm:text-5xl">
-            Converta e edite imagens.
-            <br /> Gratuitamente, sem login.
+            {t.heroLine1}
+            <br /> {t.heroLine2}
           </h1>
-          <p className="mx-auto mt-4 max-w-xl text-muted">
-            Processamento todo no navegador. Suas imagens nunca saem do seu dispositivo.
-          </p>
+          <p className="mx-auto mt-4 max-w-xl text-muted">{t.heroSubtitle}</p>
         </div>
       </section>
 
       <div className="mx-auto max-w-5xl px-4 py-14">
         <section>
-          <h2 className="text-center font-display text-xl font-semibold text-ink">Conversão de formatos</h2>
+          <h2 className="text-center font-display text-xl font-semibold text-ink">{t.sectionConversion}</h2>
           <div className="mt-5">
             <FormatSelector />
           </div>
         </section>
 
         <section className="mt-20">
-          <h2 className="text-center font-display text-xl font-semibold text-ink">Edição de imagens</h2>
+          <h2 className="text-center font-display text-xl font-semibold text-ink">{t.sectionEditing}</h2>
           <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {editing.map((tool) => (
-              <ToolCard key={tool.href} {...tool} />
+            {t.editingTools.map((tool, i) => (
+              <ToolCard key={tool.href} href={tool.href} title={tool.title} description={tool.description} icon={EDITING_ICONS[i]} />
             ))}
           </div>
         </section>
@@ -89,7 +59,7 @@ export default function Home() {
         </div>
 
         <div className="mt-20">
-          <FaqAccordion items={SITE_FAQ} />
+          <FaqAccordion items={faq} />
         </div>
       </div>
     </Layout>

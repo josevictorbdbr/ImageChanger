@@ -1,14 +1,15 @@
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import {
-  CONVERSIONS,
   ImageFormat,
   findConversionPath,
   getAvailableFormats,
   getAvailableTargets,
 } from "../utils/conversions";
+import { useLocale } from "../utils/i18n";
+import { formatSelectorText } from "../locales/formatSelector";
 
+// Nomes de formato (PNG/JPG/WebP) não mudam entre idiomas, então ficam fora do dicionário.
 const LABELS: Record<ImageFormat, string> = {
   png: "PNG",
   jpg: "JPG",
@@ -17,6 +18,8 @@ const LABELS: Record<ImageFormat, string> = {
 
 export default function FormatSelector() {
   const router = useRouter();
+  const locale = useLocale();
+  const t = formatSelectorText[locale];
   const formats = useMemo(getAvailableFormats, []);
 
   const [from, setFrom] = useState<ImageFormat>("png");
@@ -47,6 +50,8 @@ export default function FormatSelector() {
   const path = findConversionPath(from, to);
   const swapDisabled = !findConversionPath(to, from);
 
+  // router.push preserva o locale atual automaticamente (comportamento padrão do Next),
+  // então não precisa de tratamento extra pra manter o usuário no idioma certo.
   const handleConvert = () => {
     if (path) {
       router.push(path);
@@ -57,7 +62,7 @@ export default function FormatSelector() {
     <div className="mx-auto max-w-xl">
       <div className="flex flex-col items-center gap-4 rounded-2xl border border-border bg-white p-4 sm:flex-row sm:justify-center sm:p-6">
 
-        <label htmlFor="format-from" className="sr-only">Formato de origem</label>
+        <label htmlFor="format-from" className="sr-only">{t.fromLabel}</label>
         <select
           id="format-from"
           value={from}
@@ -75,14 +80,14 @@ export default function FormatSelector() {
           type="button"
           onClick={handleSwap}
           disabled={swapDisabled}
-          aria-label="Trocar formatos"
-          title="Trocar formatos"
+          aria-label={t.swapAria}
+          title={t.swapAria}
           className="rounded-full border border-border p-2 text-lg text-muted transition hover:border-accent hover:text-accent disabled:cursor-not-allowed disabled:opacity-40"
         >
           ⇄
         </button>
 
-        <label htmlFor="format-to" className="sr-only">Formato de destino</label>
+        <label htmlFor="format-to" className="sr-only">{t.toLabel}</label>
         <select
           id="format-to"
           value={to}
@@ -101,7 +106,7 @@ export default function FormatSelector() {
           disabled={!path}
           className="w-full rounded-full bg-accent px-6 py-2 font-medium text-white transition-colors hover:bg-accent-hover disabled:opacity-50 sm:w-auto"
         >
-          Ir para conversão
+          {t.convertButton}
         </button>
       </div>
 

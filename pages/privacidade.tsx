@@ -1,6 +1,60 @@
+import Link from "next/link";
 import LegalLayout from "../components/LegalLayout";
+import { useLocale } from "../utils/i18n";
 
 export default function Privacidade() {
+  const locale = useLocale();
+
+  if (locale === "en") {
+    return (
+      <LegalLayout
+        title="Privacy Policy"
+        path="/privacidade"
+        updatedAt="08/07/2026"
+        description="Learn how Image Changer handles information: all image processing happens locally in your browser, with no uploads to any server."
+      >
+        <p>
+          This Privacy Policy explains how Image Changer handles information throughout your use of the site. Image
+          Changer is maintained independently by José Victor (an individual), who can be reached at{" "}
+          <a href="mailto:josevictorbdbr@gmail.com">josevictorbdbr@gmail.com</a>.
+        </p>
+
+        <h2>Image processing</h2>
+        <p>
+          Images you submit for conversion or editing are processed entirely in your browser, using the Canvas API.
+          They are never sent to, stored, or viewed by us at any point. When you close or refresh the page, the
+          image is discarded.
+        </p>
+
+        <h2>Data we collect</h2>
+        <p>Image Changer doesn't require registration, login, or any personal information to use. Even so:</p>
+        <ul>
+          <li>
+            Our hosting provider may automatically collect technical access data (such as IP address, browser type,
+            and pages visited) for security and service operation purposes.
+          </li>
+          <li>
+            Cookies and similar technologies may be used by Google AdSense to display ads (see the section below and
+            our <Link href="/cookies">Cookie Policy</Link>).
+          </li>
+        </ul>
+
+        <h2>Your rights (LGPD)</h2>
+        <p>
+          Since we don't collect personal data beyond what's described above, there's little to access, correct, or
+          delete. Still, if you have any questions or requests related to your data, contact us at{" "}
+          <a href="mailto:josevictorbdbr@gmail.com">josevictorbdbr@gmail.com</a>.
+        </p>
+
+        <h2>Children and teenagers</h2>
+        <p>Image Changer is not directed at anyone under 18 and does not intentionally collect data from minors.</p>
+
+        <h2>Changes to this policy</h2>
+        <p>This policy may be updated periodically. The date at the top of this page indicates the most recent version.</p>
+      </LegalLayout>
+    );
+  }
+
   return (
     <LegalLayout title="Política de Privacidade" path="/privacidade" updatedAt="08/07/2026">
       <p>
@@ -25,24 +79,9 @@ export default function Privacidade() {
         </li>
         <li>
           Cookies e tecnologias semelhantes podem ser usados pelo Google AdSense para exibição de anúncios (veja a
-          seção abaixo e nossa <a href="/cookies">Política de Cookies</a>).
+          seção abaixo e nossa <Link href="/cookies">Política de Cookies</Link>).
         </li>
       </ul>
-
-      <h2>Publicidade (Google AdSense)</h2>
-      <p>
-        Este site pode exibir anúncios fornecidos pelo Google AdSense. O Google pode usar cookies para exibir
-        anúncios com base em visitas suas a este e a outros sites. Você pode desativar a publicidade personalizada
-        nas{" "}
-        <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer">
-          Configurações de Anúncios do Google
-        </a>{" "}
-        ou consultar como o Google trata seus dados na{" "}
-        <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">
-          política de tecnologias de anúncios do Google
-        </a>
-        .
-      </p>
 
       <h2>Seus direitos (LGPD)</h2>
       <p>

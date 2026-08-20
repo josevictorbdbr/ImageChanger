@@ -1,6 +1,56 @@
 import LegalLayout from "../components/LegalLayout";
+import { useLocale } from "../utils/i18n";
 
 export default function Sobre() {
+  const locale = useLocale();
+
+  if (locale === "en") {
+    return (
+      <LegalLayout
+        title="About"
+        path="/sobre"
+        updatedAt="25/07/2026"
+        description="Get to know Image Changer: an independent image conversion and editing project, built to run 100% in the browser, with no registration and no files ever sent to a server."
+      >
+        <p>
+          Image Changer was born from a simple need: converting and editing images quickly, without having to
+          install programs, create accounts, or send personal files to unknown servers.
+        </p>
+
+        <h2>Why this site exists</h2>
+        <p>
+          Many online image conversion tools require registration, show aggressive ads, or upload your images to a
+          server for processing — which raises legitimate privacy concerns. Image Changer was built to solve that:
+          all processing happens directly in your browser, using your device's native APIs. No image you convert or
+          edit here ever leaves your computer or phone.
+        </p>
+
+        <h2>Who maintains the project</h2>
+        <p>
+          Image Changer is independently developed and maintained by José Victor, with a focus on simplicity and
+          performance: no registration, no backend, and no database. The code runs entirely on the front end, with
+          conversions and edits done via the browser's Canvas API.
+        </p>
+
+        <h2>What you'll find here</h2>
+        <ul>
+          <li>Conversion between PNG, JPG, and WebP</li>
+          <li>Cropping, resizing, compression, rotation, and mirroring of images</li>
+          <li>Batch conversion of up to 5 images at once</li>
+        </ul>
+        <p>
+          New formats and tools are added gradually, always prioritizing local processing and ease of use.
+        </p>
+
+        <h2>Contact</h2>
+        <p>
+          Found a bug, or have a suggestion? You can also reach out by email:{" "}
+          <a href="mailto:josevictorbdbr@gmail.com">josevictorbdbr@gmail.com</a>.
+        </p>
+      </LegalLayout>
+    );
+  }
+
   return (
     <LegalLayout
       title="Sobre"
@@ -42,11 +92,7 @@ export default function Sobre() {
 
       <h2>Contato</h2>
       <p>
-        Encontrou um problema, tem uma sugestão ou quer acompanhar o desenvolvimento do projeto? Acesse o GitHub:{" "}
-        <a href="https://github.com/josevictorbdbr" target="_blank" rel="noopener noreferrer">
-          github.com/josevictorbdbr
-        </a>
-        . Também é possível entrar em contato por e-mail:{" "}
+        Encontrou um problema, ou tem alguma sugestão? Pode entrar em contato por e-mail:{" "}
         <a href="mailto:josevictorbdbr@gmail.com">josevictorbdbr@gmail.com</a>.
       </p>
     </LegalLayout>

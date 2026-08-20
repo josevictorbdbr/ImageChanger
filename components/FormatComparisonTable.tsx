@@ -1,63 +1,37 @@
-interface FormatRow {
-  format: string;
-  transparency: string;
-  compression: string;
-  bestFor: string;
-}
-
-const ROWS: FormatRow[] = [
-  {
-    format: "PNG",
-    transparency: "Sim",
-    compression: "Sem perdas",
-    bestFor: "Logos, ilustrações e imagens com fundo transparente.",
-  },
-  {
-    format: "JPG",
-    transparency: "Não",
-    compression: "Com perdas",
-    bestFor: "Fotografias e imagens complexas com menor tamanho de arquivo.",
-  },
-  {
-    format: "WebP",
-    transparency: "Sim",
-    compression: "Alta eficiência",
-    bestFor: "Imagens otimizadas para sites e a web moderna.",
-  },
-];
+import { useLocale } from "../utils/i18n";
+import { formatComparisonText } from "../locales/formatComparisonTable";
 
 export default function FormatComparisonTable() {
+  const locale = useLocale();
+  const t = formatComparisonText[locale];
+
   return (
     <section>
-      <h2 className="text-center font-display text-xl font-semibold text-ink">Comparação entre formatos</h2>
-      <p className="mt-2 text-center text-sm text-muted">
-        Não sabe qual formato escolher? Veja as principais diferenças entre PNG, JPG e WebP.
-      </p>
+      <h2 className="text-center font-display text-xl font-semibold text-ink">{t.title}</h2>
+      <p className="mt-2 text-center text-sm text-muted">{t.subtitle}</p>
 
       <div className="mt-5 overflow-x-auto">
         <table className="w-full min-w-[560px] border-collapse text-left text-sm">
-          <caption className="sr-only">
-            Comparação de suporte a transparência, tipo de compressão e melhor uso por formato de imagem
-          </caption>
+          <caption className="sr-only">{t.caption}</caption>
           <thead>
             <tr className="border-b border-border">
               <th scope="col" className="px-4 py-3 font-display font-semibold text-ink">
-                Formato
+                {t.colFormat}
               </th>
               <th scope="col" className="px-4 py-3 font-display font-semibold text-ink">
-                Transparência
+                {t.colTransparency}
               </th>
               <th scope="col" className="px-4 py-3 font-display font-semibold text-ink">
-                Compressão
+                {t.colCompression}
               </th>
               <th scope="col" className="px-4 py-3 font-display font-semibold text-ink">
-                Melhor uso
+                {t.colBestFor}
               </th>
             </tr>
           </thead>
           <tbody>
-            {ROWS.map((row, i) => (
-              <tr key={row.format} className={i !== ROWS.length - 1 ? "border-b border-border" : ""}>
+            {t.rows.map((row, i) => (
+              <tr key={row.format} className={i !== t.rows.length - 1 ? "border-b border-border" : ""}>
                 <th scope="row" className="px-4 py-3 font-medium text-ink">
                   {row.format}
                 </th>

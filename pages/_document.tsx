@@ -20,16 +20,6 @@ export default function Document() {
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
-
-        {/* Script global do Google AdSense — carrega uma única vez, em todas as páginas.
-            strategy="beforeInteractive" é o que garante que o next/script injete isso
-            no <head> do HTML inicial (só funciona a partir do _document). */}
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8253287126741398"
-          crossOrigin="anonymous"
-          strategy="beforeInteractive"
-        />
       </Head>
       <body>
         <Main />

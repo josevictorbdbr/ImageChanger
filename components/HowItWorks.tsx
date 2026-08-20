@@ -1,38 +1,15 @@
-interface Step {
-  number: string;
-  title: string;
-  description: string;
-}
-
-const STEPS: Step[] = [
-  {
-    number: "1",
-    title: "Escolha a ferramenta",
-    description: "Selecione o formato de conversão ou a função de edição desejada.",
-  },
-  {
-    number: "2",
-    title: "Selecione suas imagens",
-    description: "Arraste os arquivos até a área indicada ou clique para buscar no dispositivo.",
-  },
-  {
-    number: "3",
-    title: "Faça os ajustes",
-    description: "Configure qualidade, tamanho, corte ou rotação conforme a ferramenta escolhida.",
-  },
-  {
-    number: "4",
-    title: "Baixe instantaneamente",
-    description: "Receba o resultado pronto direto no seu navegador, sem espera.",
-  },
-];
+import { useLocale } from "../utils/i18n";
+import { howItWorksText } from "../locales/howItWorks";
 
 export default function HowItWorks() {
+  const locale = useLocale();
+  const t = howItWorksText[locale];
+
   return (
     <section>
-      <h2 className="text-center font-display text-xl font-semibold text-ink">Como funciona</h2>
+      <h2 className="text-center font-display text-xl font-semibold text-ink">{t.title}</h2>
       <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {STEPS.map((step) => (
+        {t.steps.map((step) => (
           <div key={step.number} className="rounded-2xl border border-border bg-white p-5">
             <span className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-paper font-mono text-sm font-semibold text-ink">
               {step.number}

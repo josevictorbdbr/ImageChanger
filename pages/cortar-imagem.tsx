@@ -8,19 +8,13 @@ import { useImageFile } from "../hooks/useImageFile";
 import { useObjectUrl } from "../hooks/useObjectUrl";
 import { cropImage, CropArea } from "../tools/imageEditor";
 import { downloadBlob } from "../utils/downloadFile";
-
-const faq = [
-  {
-    question: "Como escolho a área do corte?",
-    answer: "Arraste o quadro sobre a imagem para posicioná-lo e puxe os círculos nos cantos para ajustar o tamanho.",
-  },
-  {
-    question: "Funciona no celular?",
-    answer: "Sim, o quadro de corte pode ser ajustado tanto com o mouse quanto com o dedo, na tela sensível ao toque.",
-  },
-];
+import { useLocale } from "../utils/i18n";
+import { cortarImagemText } from "../locales/pages/cortar-imagem";
 
 export default function CortarImagem() {
+  const locale = useLocale();
+  const t = cortarImagemText[locale];
+
   const { file, previewUrl, isDragging, selectFile, reset, handleDrop, handleDragOver, handleDragLeave } =
     useImageFile();
   const [area, setArea] = useState<CropArea>({ x: 0, y: 0, width: 0, height: 0 });
@@ -35,7 +29,7 @@ export default function CortarImagem() {
     try {
       setResult(await cropImage(file, area));
     } catch {
-      alert("Não foi possível cortar esta imagem.");
+      alert(t.errorMessage);
     } finally {
       setIsProcessing(false);
     }
@@ -44,21 +38,16 @@ export default function CortarImagem() {
   const handleDownload = () => {
     if (!result || !file) return;
     const [name, ext] = [file.name.replace(/\.[^.]+$/, ""), file.name.split(".").pop()];
-    downloadBlob(result, `${name}-cortada.${ext}`);
+    downloadBlob(result, `${name}-${t.downloadSuffix}.${ext}`);
   };
 
   return (
     <Layout>
-      <SeoHead
-        title="Cortar imagem"
-        description="Corte imagens gratuitamente, direto no navegador, arrastando a área que você quer manter."
-        path="/cortar-imagem"
-        faq={faq}
-      />
+      <SeoHead title={t.seoTitle} description={t.seoDescription} path="/cortar-imagem" faq={t.faq} />
 
       <section className="mx-auto max-w-2xl px-4 py-10">
-        <h1 className="text-3xl font-bold text-ink text-center">Cortar imagem</h1>
-        <p className="mt-2 text-muted text-center">Arraste o quadro para posicionar e os cantos para redimensionar o corte.</p>
+        <h1 className="text-3xl font-bold text-ink text-center">{t.title}</h1>
+        <p className="mt-2 text-muted text-center">{t.subtitle}</p>
 
         <div className="mt-8">
           {!file && (
@@ -77,14 +66,14 @@ export default function CortarImagem() {
                 <>
                   <img
                     src={showOriginal ? previewUrl : resultUrl}
-                    alt={showOriginal ? "Pré-visualização" : "Imagem cortada"}
+                    alt={showOriginal ? t.previewAlt : t.croppedAlt}
                     className={`max-h-80 rounded-lg border ${showOriginal ? "border-border" : "border-accent"}`}
                   />
                   <button
                     onClick={() => setShowOriginal((v) => !v)}
                     className="text-sm text-muted underline underline-offset-2"
                   >
-                    {showOriginal ? "Ver imagem cortada" : "Ver imagem original"}
+                    {showOriginal ? t.viewCropped : t.viewOriginal}
                   </button>
                 </>
               ) : (
@@ -102,14 +91,14 @@ export default function CortarImagem() {
                   disabled={isProcessing || !area.width}
                   className="rounded-full bg-accent px-6 py-2 font-medium text-white hover:bg-accent-hover disabled:opacity-50"
                 >
-                  {isProcessing ? "Processando..." : "Cortar imagem"}
+                  {isProcessing ? t.processing : t.cropButton}
                 </button>
               ) : (
                 <button
                   onClick={handleDownload}
                   className="rounded-full bg-success px-6 py-2 font-medium text-white hover:bg-success-hover"
                 >
-                  Baixar imagem
+                  {t.downloadButton}
                 </button>
               )}
 
@@ -121,13 +110,13 @@ export default function CortarImagem() {
                 }}
                 className="text-sm text-muted underline underline-offset-2"
               >
-                Escolher outra imagem
+                {t.chooseAnother}
               </button>
             </div>
           )}
         </div>
 
-        <FaqList items={faq} />
+        <FaqList items={t.faq as unknown as { question: string; answer: string }[]} />
       </section>
     </Layout>
   );

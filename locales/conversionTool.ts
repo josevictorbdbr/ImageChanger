@@ -1,0 +1,46 @@
+// Textos de interface do ConversionTool.tsx (botões, status, mensagens de erro).
+// Título, descrição e "sobre esta conversão" ficam em locales/pages/*, pois variam por página.
+export const conversionToolText = {
+  "pt-BR": {
+    aboutTitleDefault: "Sobre esta conversão",
+    filesSelected: (n: number, max: number) => `${n} de ${max} imagens selecionadas`,
+    converting: "Convertendo...",
+    convertingMultiple: (i: number, total: number) => `Convertendo ${i} de ${total}...`,
+    convertMultipleButton: (n: number, format: string) => `Converter ${n} imagens para ${format}`,
+    convertSingleButton: (format: string) => `Converter para ${format}`,
+    removeAria: (name: string) => `Remover ${name}`,
+    original: "Original",
+    converted: "Convertida",
+    viewOriginal: "Ver original",
+    viewConverted: "Ver convertida",
+    download: "Baixar",
+    zipPreparing: "Preparando .zip...",
+    zipDownloadAll: "Baixar todas em um .zip",
+    zipError: "Não foi possível gerar o arquivo .zip. Tente novamente.",
+    convertAgain: "Converter outras imagens",
+    conversionError: "Não foi possível converter esta imagem.",
+    partialErrorMessage: (errorCount: number, total: number) =>
+      `${errorCount} de ${total} imagens não puderam ser convertidas — baixe as que deram certo individualmente acima, ou tente novamente com outro lote.`,
+  },
+  en: {
+    aboutTitleDefault: "About this conversion",
+    filesSelected: (n: number, max: number) => `${n} of ${max} images selected`,
+    converting: "Converting...",
+    convertingMultiple: (i: number, total: number) => `Converting ${i} of ${total}...`,
+    convertMultipleButton: (n: number, format: string) => `Convert ${n} images to ${format}`,
+    convertSingleButton: (format: string) => `Convert to ${format}`,
+    removeAria: (name: string) => `Remove ${name}`,
+    original: "Original",
+    converted: "Converted",
+    viewOriginal: "View original",
+    viewConverted: "View converted",
+    download: "Download",
+    zipPreparing: "Preparing .zip...",
+    zipDownloadAll: "Download all as .zip",
+    zipError: "Couldn't generate the .zip file. Please try again.",
+    convertAgain: "Convert other images",
+    conversionError: "Couldn't convert this image.",
+    partialErrorMessage: (errorCount: number, total: number) =>
+      `${errorCount} of ${total} images couldn't be converted — download the successful ones above, or try again with a different batch.`,
+  },
+} as const;

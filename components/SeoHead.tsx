@@ -11,7 +11,7 @@ interface SeoHeadProps {
   title: string;
   description: string;
   path: string;
-  faq?: FaqItem[];
+  faq?: readonly FaqItem[];
   noindex?: boolean;
 }
 

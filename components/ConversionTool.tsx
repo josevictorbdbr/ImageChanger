@@ -3,7 +3,6 @@ import JSZip from "jszip";
 import Layout from "./Layout";
 import DropZone from "./DropZone";
 import SeoHead from "./SeoHead";
-import FormatComparisonTable from "./FormatComparisonTable";
 import { useMultiImageFiles, ManagedFile } from "../hooks/useMultiImageFiles";
 import { convertImage, ImageFormat } from "../tools/imageConverter";
 import { downloadBlob } from "../utils/downloadFile";
@@ -83,16 +82,12 @@ export default function ConversionTool({
     setDimensions((prev) => ({ ...prev, [id]: { width: naturalWidth, height: naturalHeight } }));
   };
 
-  // mostra o tamanho de arquivo correspondente ao que está selecionado no toggle
-  // (original ou convertida), junto com a dimensão mais recente lida do <img>
   const formatMeta = (item: ManagedFile, sizeOverride?: number) => {
     const dim = dimensions[item.id];
     const size = formatBytes(sizeOverride ?? item.file.size);
     return dim ? `${size} · ${dim.width}×${dim.height}` : size;
   };
 
-  // percorre a lista de arquivos e chama a função de conversão já existente para cada um,
-  // sem alterar convertImage — cada imagem segue independente mesmo se alguma falhar
   const convertAll = async () => {
     setIsConverting(true);
     setZipError(null);
@@ -174,11 +169,15 @@ export default function ConversionTool({
     <Layout>
       <SeoHead title={title} description={description} path={path} />
 
-      <section className="mx-auto max-w-2xl px-4 py-10">
-        <h1 className="text-3xl font-bold text-ink text-center">{title}</h1>
-        <p className="mt-2 text-muted text-center">{description}</p>
+      {/* Hero no mesmo padrão das páginas-hub: fundo pontilhado, só o título */}
+      <section className="bg-dot-grid bg-dot-grid border-b border-border">
+        <div className="mx-auto max-w-5xl px-4 py-16 text-center">
+          <h1 className="font-display text-4xl font-bold text-ink sm:text-5xl">{title}</h1>
+        </div>
+      </section>
 
-        <div className="mt-10">
+      <section className="mx-auto max-w-2xl px-4 py-10">
+        <div className="mt-2">
           {files.length === 0 && (
             <DropZone
               isDragging={isDragging}
@@ -319,10 +318,6 @@ export default function ConversionTool({
               )}
             </div>
           )}
-        </div>
-
-        <div className="mx-auto max-w-5xl px-4 pb-14 mt-16">
-          <FormatComparisonTable />
         </div>
       </section>
     </Layout>

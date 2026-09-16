@@ -2,13 +2,11 @@ export const formatSelectorText = {
   "pt-BR": {
     fromLabel: "Formato de origem",
     toLabel: "Formato de destino",
-    swapAria: "Trocar formatos",
-    convertButton: "Ir para conversão",
+    detectLabel: "Automático",
   },
   en: {
     fromLabel: "Source format",
     toLabel: "Target format",
-    swapAria: "Swap formats",
-    convertButton: "Go to conversion",
+    detectLabel: "Auto",
   },
 } as const;

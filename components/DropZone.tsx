@@ -41,8 +41,8 @@ export default function DropZone({
       onDrop={onDrop}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
-      className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed bg-dot-grid bg-dot-grid p-12 text-center transition-colors ${
-        isDragging ? "border-accent bg-accent/5" : "border-border hover:border-accent/50"
+      className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-blue-400 bg-dot-grid bg-dot-grid p-12 text-center transition-colors hover:bg-blue-500/10 ${
+        isDragging ? "bg-blue-500/10" : ""
       }`}
     >
       <span className="font-medium text-ink">{multiple ? t.dropZoneMultiple : t.dropZoneSingle}</span>

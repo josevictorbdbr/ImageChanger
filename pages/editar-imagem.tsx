@@ -1,16 +1,16 @@
 import Layout from "../components/Layout";
 import SeoHead from "../components/SeoHead";
-import UnifiedConverter from "../components/UnifiedConverter";
+import UnifiedEditor from "../components/UnifiedEditor";
 import { useLocale } from "../utils/i18n";
-import { converterFormatoText } from "../locales/pages/index";
+import { editarImagemText } from "../locales/pages/editar-imagem";
 
-export default function ConverterFormato() {
+export default function EditarImagem() {
   const locale = useLocale();
-  const t = converterFormatoText[locale];
+  const t = editarImagemText[locale];
 
   return (
     <Layout>
-      <SeoHead title={t.seoTitle} description={t.seoDescription} path="/" />
+      <SeoHead title={t.seoTitle} description={t.seoDescription} path="/editar-imagem" faq={t.faq} />
 
       <section className="bg-dot-grid bg-dot-grid border-b border-border">
         <div className="mx-auto max-w-5xl px-4 py-16 text-center">
@@ -18,9 +18,9 @@ export default function ConverterFormato() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-5xl px-4 py-14">
-        <UnifiedConverter />
-      </div>
+      <section className="mx-auto max-w-2xl px-4 py-10">
+        <UnifiedEditor />
+      </section>
     </Layout>
   );
 }

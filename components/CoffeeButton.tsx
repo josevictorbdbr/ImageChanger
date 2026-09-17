@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocale } from "../utils/i18n";
 import { common } from "../locales/common";
 
+//Mande o pix
 const EMAIL = "f2aca944-c86a-4642-9368-24127dfaee56";
 
 export default function CoffeeButton() {

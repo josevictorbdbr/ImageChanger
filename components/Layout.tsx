@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       <Sidebar open={mobileOpen} onClose={() => setMobileOpen(false)} />
 
       <div className="flex min-h-screen flex-1 flex-col">
-        {/* Barra superior: só existe no mobile, pra abrir a gaveta da sidebar */}
+        {/* Barra superior, só existe no mobile */}
         <div className="flex items-center justify-between border-b border-border bg-paper/80 px-4 py-3 backdrop-blur lg:hidden">
           <Link href="/" className="flex items-center gap-2 font-display text-base font-semibold text-ink">
             <img src="/logo.png" alt="Image Changer" className="h-7 w-7" />

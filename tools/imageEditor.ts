@@ -88,8 +88,6 @@ export interface CropArea {
   height: number;
 }
 
-// MVP: coordenadas numéricas informadas pelo usuário.
-// Evolução futura: seleção visual da área (ex: biblioteca react-easy-crop).
 export async function cropImage(file: File, area: CropArea): Promise<Blob> {
   const img = await loadImage(file);
   const canvas = document.createElement("canvas");

@@ -3,6 +3,7 @@ import JSZip from "jszip";
 import Layout from "./Layout";
 import DropZone from "./DropZone";
 import SeoHead from "./SeoHead";
+import PageHero from "./PageHero";
 import { useMultiImageFiles, ManagedFile } from "../hooks/useMultiImageFiles";
 import { convertImage, ImageFormat } from "../tools/imageConverter";
 import { downloadBlob } from "../utils/downloadFile";
@@ -170,11 +171,7 @@ export default function ConversionTool({
       <SeoHead title={title} description={description} path={path} />
 
       {/* Hero no mesmo padrão das páginas-hub: fundo pontilhado, só o título */}
-      <section className="bg-dot-grid bg-dot-grid border-b border-border">
-        <div className="mx-auto max-w-5xl px-4 py-16 text-center">
-          <h1 className="font-display text-4xl font-bold text-ink sm:text-5xl">{title}</h1>
-        </div>
-      </section>
+      <PageHero title={title} />
 
       <section className="mx-auto max-w-2xl px-4 py-10">
         <div className="mt-2">
@@ -199,7 +196,7 @@ export default function ConversionTool({
                 {files.map((item) => {
                   const r = results[item.id];
                   return (
-                    <li key={item.id} className="rounded-xl border border-border p-3">
+                    <li key={item.id} className="rounded-xl border border-border bg-white p-3 shadow-sm">
                       {(!r || r.status === "pending" || r.status === "converting") && (
                         <div className="flex items-center gap-3">
                           <img
@@ -235,7 +232,7 @@ export default function ConversionTool({
                           />
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm text-ink">{item.file.name}</p>
-                            <p className="text-xs text-red-600">{r.error}</p>
+                            <p className="text-xs text-danger">{r.error}</p>
                           </div>
                         </div>
                       )}
@@ -305,10 +302,10 @@ export default function ConversionTool({
                     </button>
                   )}
 
-                  {zipError && <p className="text-sm text-red-600">{zipError}</p>}
+                  {zipError && <p className="text-sm text-danger">{zipError}</p>}
 
                   {files.length > 1 && !allSucceeded && (
-                    <p className="text-center text-sm text-red-600">{t.partialErrorMessage(errorCount, files.length)}</p>
+                    <p className="text-center text-sm text-danger">{t.partialErrorMessage(errorCount, files.length)}</p>
                   )}
 
                   <button onClick={handleReset} className="text-sm text-muted underline underline-offset-2">

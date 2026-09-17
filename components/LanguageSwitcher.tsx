@@ -1,8 +1,6 @@
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-// Agora vive dentro da Sidebar (desktop e mobile), então não tem mais
-// posição fixa própria — quem posiciona é o componente pai.
 export default function LanguageSwitcher() {
   const { pathname, query, asPath, locale } = useRouter();
   const target = locale === "en" ? "pt-BR" : "en";

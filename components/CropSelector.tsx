@@ -39,7 +39,7 @@ export default function CropSelector({ imageUrl, onChange }: CropSelectorProps) 
     setBox({ x: (width - boxWidth) / 2, y: (height - boxHeight) / 2, width: boxWidth, height: boxHeight });
   };
 
-  // converte a seleção (em pixels exibidos) para pixels reais da imagem original
+  // converte a seleção para pixels reais da imagem original
   useEffect(() => {
     if (!displaySize.width || !naturalSize.width) return;
     const scaleX = naturalSize.width / displaySize.width;
@@ -92,7 +92,7 @@ export default function CropSelector({ imageUrl, onChange }: CropSelectorProps) 
     dragRef.current = null;
   };
 
-  // Posições com suporte a mobile (offsets de -3 / -12px) e desktop (offsets de -1.5 / -7px)
+  // Posicoes com suporte a mobile e PC
   const corners: { key: Handle; className: string }[] = [
     { key: "nw", className: "-left-3 -top-3 md:-left-1.5 md:-top-1.5 cursor-nwse-resize" },
     { key: "ne", className: "-right-3 -top-3 md:-right-1.5 md:-top-1.5 cursor-nesw-resize" },

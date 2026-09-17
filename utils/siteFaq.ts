@@ -1,7 +1,6 @@
 import { FaqItem } from "../components/FaqList";
 
-// FAQ genérica do site, usada na Home (Fase 1 da arquitetura mista SEO + AdSense)
-// para equilibrar a densidade de conteúdo. Agora bilíngue: SITE_FAQ["pt-BR"] / SITE_FAQ["en"].
+// FAQ genérica do site
 export const SITE_FAQ: Record<"pt-BR" | "en", FaqItem[]> = {
   "pt-BR": [
     {

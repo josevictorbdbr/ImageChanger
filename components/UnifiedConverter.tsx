@@ -16,9 +16,6 @@ const LABELS: Record<ImageFormat, string> = {
   webp: "WebP",
 };
 
-// "detectar" é o modo padrão: aceita qualquer formato de imagem suportado e
-// permite converter um lote com tipos misturados. Escolher um formato
-// específico restringe o seletor de arquivos (no clique) só àquele tipo.
 type FromFormat = ImageFormat | "detectar";
 
 const MIME: Record<ImageFormat, string> = {
@@ -61,10 +58,6 @@ function uniqueZipName(name: string, usedNames: Set<string>): string {
   return candidate;
 }
 
-// Antes era um componente por rota fixa (ex: /png-para-jpg com toFormat="jpg"
-// travado). Agora o par de formatos é escolhido aqui dentro, então toFormat
-// vira estado em vez de prop — o resto da lógica de conversão é a mesma que
-// já existia em ConversionTool.tsx.
 export default function UnifiedConverter() {
   const locale = useLocale();
   const t = conversionToolText[locale];
@@ -201,7 +194,7 @@ export default function UnifiedConverter() {
               {files.map((item) => {
                 const r = results[item.id];
                 return (
-                  <li key={item.id} className="rounded-xl border border-border p-3">
+                  <li key={item.id} className="rounded-xl border border-border bg-white p-3 shadow-sm">
                     {(!r || r.status === "pending" || r.status === "converting") && (
                       <div className="flex items-center gap-3">
                         <img
@@ -237,7 +230,7 @@ export default function UnifiedConverter() {
                         />
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm text-ink">{item.file.name}</p>
-                          <p className="text-xs text-red-600">{r.error}</p>
+                          <p className="text-xs text-danger">{r.error}</p>
                         </div>
                       </div>
                     )}
@@ -351,10 +344,10 @@ export default function UnifiedConverter() {
                   </button>
                 )}
 
-                {zipError && <p className="text-sm text-red-600">{zipError}</p>}
+                {zipError && <p className="text-sm text-danger">{zipError}</p>}
 
                 {files.length > 1 && !allSucceeded && (
-                  <p className="text-center text-sm text-red-600">{t.partialErrorMessage(errorCount, files.length)}</p>
+                  <p className="text-center text-sm text-danger">{t.partialErrorMessage(errorCount, files.length)}</p>
                 )}
 
                 <button onClick={handleReset} className="text-sm text-muted underline underline-offset-2">

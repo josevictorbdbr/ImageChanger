@@ -18,11 +18,7 @@ interface Dimensions {
   height: number;
 }
 
-// Une as 5 ferramentas que antes eram páginas separadas (cortar-imagem.tsx,
-// redimensionar-imagem.tsx, comprimir-imagem.tsx, girar-imagem.tsx,
-// espelhar-imagem.tsx). A imagem é carregada uma vez só; trocar de ferramenta
-// reaproveita o mesmo arquivo original e limpa o resultado anterior — cada
-// operação sempre parte da imagem original, nunca encadeia uma sobre a outra.
+// Une as 5 ferramentas que antes eram páginas separadas
 export default function UnifiedEditor() {
   const locale = useLocale();
   const t = editarImagemText[locale];
@@ -45,7 +41,7 @@ export default function UnifiedEditor() {
   const [angle, setAngle] = useState<90 | 180 | 270>(90);
   const [direction, setDirection] = useState<"horizontal" | "vertical">("horizontal");
 
-  // estado compartilhado do resultado
+  // estado compartilhado
   const [result, setResult] = useState<Blob | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [showOriginal, setShowOriginal] = useState(false);
@@ -160,7 +156,7 @@ export default function UnifiedEditor() {
             </p>
           )}
 
-          {/* seletor de ferramenta — aparece sempre, logo abaixo da imagem */}
+          {/* seletor de ferramenta*/}
           <div className="flex flex-wrap justify-center gap-2">
             {TOOL_KEYS.map((key) => (
               <button

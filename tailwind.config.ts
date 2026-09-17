@@ -8,8 +8,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#12141A",
-        paper: "#F5F6FA",
+        ink: "#1A1D29",
+        paper: "#f3f4f8",
+        surface: "#F6F7FB",
         muted: "#667085",
         border: "#E3E6ED",
         accent: {
@@ -20,6 +21,14 @@ const config: Config = {
           DEFAULT: "#12B76A",
           hover: "#0E9C5A",
         },
+        warning: {
+           DEFAULT: "#F79009",
+            hover: "#DC7F05",
+        },
+        danger: {
+          DEFAULT: "#F04438",
+          hover: "#D92D20",
+        },
       },
       fontFamily: {
         display: ["var(--font-display)"],
@@ -27,8 +36,7 @@ const config: Config = {
         mono: ["var(--font-mono)"],
       },
       backgroundImage: {
-        "dot-grid":
-          "radial-gradient(circle, #D8DCE6 1px, transparent 1px)",
+        "dot-grid": "radial-gradient(circle, rgba(54,84,255,0.18) 1px, transparent 1px)",
       },
       backgroundSize: {
         "dot-grid": "16px 16px",

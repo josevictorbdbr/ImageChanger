@@ -7,8 +7,6 @@ interface FaqAccordionProps {
   title?: string;
 }
 
-// Acordeão semântico (details/summary) para conteúdo de FAQ genérico.
-// Distinto de FaqList.tsx, que usa dl/dt/dd para a FAQ específica de cada ferramenta.
 export default function FaqAccordion({ items, title }: FaqAccordionProps) {
   const locale = useLocale();
   const resolvedTitle = title ?? common[locale].faqTitle;

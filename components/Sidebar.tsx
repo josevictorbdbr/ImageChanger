@@ -4,9 +4,7 @@ import { useLocale } from "../utils/i18n";
 import { sidebarText } from "../locales/sidebar";
 import LanguageSwitcher from "./LanguageSwitcher";
 
-// Rotas que ainda existem por SEO/link direto (não linkadas na navegação),
-// mas que semanticamente pertencem à seção "Converter Formato" — usado só
-// para destacar o item certo na sidebar quando alguém chega por uma delas.
+// Rotas que ainda existem por SEO/link direto
 const LEGACY_CONVERSION_PATHS = [
   "/",
   "/png-para-jpg",
@@ -67,12 +65,12 @@ export default function Sidebar({ open, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Desktop: coluna fixa sempre visível */}
+      {/* PC: coluna fixa sempre visível */}
       <aside className="hidden lg:flex lg:w-56 lg:shrink-0 lg:border-r lg:border-border lg:bg-white">
         {content}
       </aside>
 
-      {/* Mobile: gaveta que desliza sobre o conteúdo */}
+      {/* Mobile: gaveta que desliza */}
       <div
         className={`fixed inset-0 z-40 bg-black/40 transition-opacity lg:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"

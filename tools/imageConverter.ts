@@ -26,7 +26,7 @@ export function convertImage(
         return;
       }
 
-      // JPG não suporta transparência, por isso preenchemos com fundo branco antes
+      // JPG não suporta transparência, ent preenche com fundo branco
       if (format === "jpg") {
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, canvas.width, canvas.height);

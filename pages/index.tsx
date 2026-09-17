@@ -1,5 +1,6 @@
 import Layout from "../components/Layout";
 import SeoHead from "../components/SeoHead";
+import PageHero from "../components/PageHero";
 import UnifiedConverter from "../components/UnifiedConverter";
 import { useLocale } from "../utils/i18n";
 import { converterFormatoText } from "../locales/pages/index";
@@ -12,11 +13,7 @@ export default function ConverterFormato() {
     <Layout>
       <SeoHead title={t.seoTitle} description={t.seoDescription} path="/" />
 
-      <section className="bg-dot-grid bg-dot-grid border-b border-border">
-        <div className="mx-auto max-w-5xl px-4 py-16 text-center">
-          <h1 className="font-display text-4xl font-bold text-ink sm:text-5xl">{t.heroTitle}</h1>
-        </div>
-      </section>
+      <PageHero title={t.heroTitle} />
 
       <div className="mx-auto max-w-5xl px-4 py-14">
         <UnifiedConverter />

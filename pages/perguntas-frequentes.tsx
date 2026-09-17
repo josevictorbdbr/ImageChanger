@@ -6,9 +6,7 @@ import { editarImagemText } from "../locales/pages/editar-imagem";
 import { useLocale } from "../utils/i18n";
 import { perguntasFrequentesText } from "../locales/pages/perguntas-frequentes";
 
-// Junta o FAQ geral do site (antes na home) com o FAQ das ferramentas de
-// edição (antes em UnifiedEditor) numa única página, sempre no estilo
-// accordion (FaqAccordion) — o mesmo que já era usado no conversor.
+// Junta o FAQ geral do site 
 export default function PerguntasFrequentes() {
   const locale = useLocale();
   const t = perguntasFrequentesText[locale];

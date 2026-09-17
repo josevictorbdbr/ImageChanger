@@ -18,9 +18,6 @@ interface SeoHeadProps {
 export default function SeoHead({ title, description, path, faq, noindex }: SeoHeadProps) {
   const { locale } = useRouter();
   const currentLocale = locale === "en" ? "en" : "pt-BR";
-
-  // path já vem sem prefixo de idioma (ex: "/jpg-para-png" ou "/").
-  // A versão en é sempre a mesma rota com /en na frente.
   const ptUrl = `${SITE_URL}${path}`;
   const enUrl = path === "/" ? `${SITE_URL}/en` : `${SITE_URL}/en${path}`;
   const url = currentLocale === "en" ? enUrl : ptUrl;
@@ -45,7 +42,7 @@ export default function SeoHead({ title, description, path, faq, noindex }: SeoH
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
 
-      {/* Injeta o Schema de WebSite na página inicial para definir o Nome do Site no Google */}
+      {/* Injeta o Schema de WebSite na página inicial para definir Nome do Site*/}
       {path === "/" && (
         <script
           type="application/ld+json"

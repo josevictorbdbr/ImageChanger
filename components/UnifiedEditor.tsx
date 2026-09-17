@@ -156,7 +156,7 @@ export default function UnifiedEditor() {
             <p className="font-mono text-xs text-muted">
               {activeTool === "comprimir"
                 ? `${t.original}: ${formatBytes(file.size)} · ${dimensions.width}×${dimensions.height}`
-                : `${showOriginal || !resultUrl ? t.original : tt.resizedLabel}: ${dimensions.width}×${dimensions.height}`}
+                : `${showOriginal || !resultUrl ? t.original : t.tools.redimensionar.resizedLabel}: ${dimensions.width}×${dimensions.height}`}
             </p>
           )}
 

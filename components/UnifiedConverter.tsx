@@ -1,6 +1,7 @@
 import { useState } from "react";
 import JSZip from "jszip";
 import DropZone from "./DropZone";
+import Select from "./Select";
 import { useMultiImageFiles, ManagedFile } from "../hooks/useMultiImageFiles";
 import { convertImage } from "../tools/imageConverter";
 import { downloadBlob } from "../utils/downloadFile";
@@ -16,6 +17,9 @@ const LABELS: Record<ImageFormat, string> = {
   webp: "WebP",
 };
 
+// "detectar" é o modo padrão: aceita qualquer formato de imagem suportado e
+// permite converter um lote com tipos misturados. Escolher um formato
+// específico restringe o seletor de arquivos (no clique) só àquele tipo.
 type FromFormat = ImageFormat | "detectar";
 
 const MIME: Record<ImageFormat, string> = {
@@ -58,6 +62,10 @@ function uniqueZipName(name: string, usedNames: Set<string>): string {
   return candidate;
 }
 
+// Antes era um componente por rota fixa (ex: /png-para-jpg com toFormat="jpg"
+// travado). Agora o par de formatos é escolhido aqui dentro, então toFormat
+// vira estado em vez de prop — o resto da lógica de conversão é a mesma que
+// já existia em ConversionTool.tsx.
 export default function UnifiedConverter() {
   const locale = useLocale();
   const t = conversionToolText[locale];
@@ -194,7 +202,7 @@ export default function UnifiedConverter() {
               {files.map((item) => {
                 const r = results[item.id];
                 return (
-                  <li key={item.id} className="rounded-xl border border-border bg-white p-3 shadow-sm">
+                  <li key={item.id} className="rounded-xl border border-border p-3">
                     {(!r || r.status === "pending" || r.status === "converting") && (
                       <div className="flex items-center gap-3">
                         <img
@@ -230,7 +238,7 @@ export default function UnifiedConverter() {
                         />
                         <div className="min-w-0 flex-1">
                           <p className="truncate text-sm text-ink">{item.file.name}</p>
-                          <p className="text-xs text-danger">{r.error}</p>
+                          <p className="text-xs text-red-600">{r.error}</p>
                         </div>
                       </div>
                     )}
@@ -276,40 +284,28 @@ export default function UnifiedConverter() {
 
       <div className="mx-auto mt-6 max-w-xl">
         <div className="flex flex-col items-center gap-4 rounded-2xl border border-border bg-white p-4 sm:flex-row sm:justify-center sm:p-6">
-          <label htmlFor="format-from" className="sr-only">
-            {ts.fromLabel}
-          </label>
-          <select
+          <Select
             id="format-from"
+            label={ts.fromLabel}
             value={from}
-            onChange={(e) => handleFromChange(e.target.value as FromFormat)}
-            className="w-40 rounded-lg border border-border px-3 py-2 text-ink focus:border-accent focus:outline-none"
-          >
-            <option value="detectar">{ts.detectLabel}</option>
-            {formats.map((f) => (
-              <option key={f} value={f}>
-                {LABELS[f]}
-              </option>
-            ))}
-          </select>
+            onChange={(v) => handleFromChange(v as FromFormat)}
+            options={[
+              { value: "detectar", label: ts.detectLabel },
+              ...formats.map((f) => ({ value: f, label: LABELS[f] })),
+            ]}
+            className="w-40"
+          />
 
           <span className="text-lg text-muted">→</span>
 
-          <label htmlFor="format-to" className="sr-only">
-            {ts.toLabel}
-          </label>
-          <select
+          <Select
             id="format-to"
+            label={ts.toLabel}
             value={to}
-            onChange={(e) => setTo(e.target.value as ImageFormat)}
-            className="w-32 rounded-lg border border-border px-3 py-2 text-ink focus:border-accent focus:outline-none"
-          >
-            {targets.map((f) => (
-              <option key={f} value={f}>
-                {LABELS[f]}
-              </option>
-            ))}
-          </select>
+            onChange={(v) => setTo(v as ImageFormat)}
+            options={targets.map((f) => ({ value: f, label: LABELS[f] }))}
+            className="w-32"
+          />
         </div>
       </div>
 
@@ -344,10 +340,10 @@ export default function UnifiedConverter() {
                   </button>
                 )}
 
-                {zipError && <p className="text-sm text-danger">{zipError}</p>}
+                {zipError && <p className="text-sm text-red-600">{zipError}</p>}
 
                 {files.length > 1 && !allSucceeded && (
-                  <p className="text-center text-sm text-danger">{t.partialErrorMessage(errorCount, files.length)}</p>
+                  <p className="text-center text-sm text-red-600">{t.partialErrorMessage(errorCount, files.length)}</p>
                 )}
 
                 <button onClick={handleReset} className="text-sm text-muted underline underline-offset-2">

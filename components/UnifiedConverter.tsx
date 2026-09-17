@@ -183,7 +183,7 @@ export default function UnifiedConverter() {
   return (
     <>
       <div className="mx-auto max-w-2xl">
-        {files.length === 0 && (
+        {files.length === 0 ? (
           <DropZone
             isDragging={isDragging}
             onDrop={handleDrop}
@@ -193,50 +193,7 @@ export default function UnifiedConverter() {
             multiple
             accept={acceptForFrom}
           />
-        )}
-      </div>
-
-      <div className="mx-auto mt-6 max-w-xl">
-        <div className="flex flex-col items-center gap-4 rounded-2xl border border-border bg-white p-4 sm:flex-row sm:justify-center sm:p-6">
-          <label htmlFor="format-from" className="sr-only">
-            {ts.fromLabel}
-          </label>
-          <select
-            id="format-from"
-            value={from}
-            onChange={(e) => handleFromChange(e.target.value as FromFormat)}
-            className="w-40 rounded-lg border border-border px-3 py-2 text-ink focus:border-accent focus:outline-none"
-          >
-            <option value="detectar">{ts.detectLabel}</option>
-            {formats.map((f) => (
-              <option key={f} value={f}>
-                {LABELS[f]}
-              </option>
-            ))}
-          </select>
-
-          <span className="text-lg text-muted">→</span>
-
-          <label htmlFor="format-to" className="sr-only">
-            {ts.toLabel}
-          </label>
-          <select
-            id="format-to"
-            value={to}
-            onChange={(e) => setTo(e.target.value as ImageFormat)}
-            className="w-32 rounded-lg border border-border px-3 py-2 text-ink focus:border-accent focus:outline-none"
-          >
-            {targets.map((f) => (
-              <option key={f} value={f}>
-                {LABELS[f]}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <div className="mx-auto mt-6 max-w-2xl">
-        {files.length > 0 && (
+        ) : (
           <div className="flex flex-col gap-4">
             {files.length > 1 && <p className="text-sm text-muted">{t.filesSelected(files.length, maxFiles)}</p>}
 
@@ -320,7 +277,52 @@ export default function UnifiedConverter() {
                 );
               })}
             </ul>
+          </div>
+        )}
+      </div>
 
+      <div className="mx-auto mt-6 max-w-xl">
+        <div className="flex flex-col items-center gap-4 rounded-2xl border border-border bg-white p-4 sm:flex-row sm:justify-center sm:p-6">
+          <label htmlFor="format-from" className="sr-only">
+            {ts.fromLabel}
+          </label>
+          <select
+            id="format-from"
+            value={from}
+            onChange={(e) => handleFromChange(e.target.value as FromFormat)}
+            className="w-40 rounded-lg border border-border px-3 py-2 text-ink focus:border-accent focus:outline-none"
+          >
+            <option value="detectar">{ts.detectLabel}</option>
+            {formats.map((f) => (
+              <option key={f} value={f}>
+                {LABELS[f]}
+              </option>
+            ))}
+          </select>
+
+          <span className="text-lg text-muted">→</span>
+
+          <label htmlFor="format-to" className="sr-only">
+            {ts.toLabel}
+          </label>
+          <select
+            id="format-to"
+            value={to}
+            onChange={(e) => setTo(e.target.value as ImageFormat)}
+            className="w-32 rounded-lg border border-border px-3 py-2 text-ink focus:border-accent focus:outline-none"
+          >
+            {targets.map((f) => (
+              <option key={f} value={f}>
+                {LABELS[f]}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="mx-auto mt-6 max-w-2xl">
+        {files.length > 0 && (
+          <div className="flex flex-col items-center gap-4">
             {!allDone && (
               <button
                 onClick={convertAll}
